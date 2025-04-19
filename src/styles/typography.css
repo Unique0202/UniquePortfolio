@@ -1,0 +1,117 @@
+/* Typography styles */
+
+h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 500;
+  }
+  
+  h4 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 500;
+  }
+  
+  p {
+    font-size: 1rem;
+    margin-bottom: var(--space-3);
+    max-width: 65ch;
+  }
+  
+  .lead {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    line-height: 1.6;
+  }
+  
+  .small {
+    font-size: 0.875rem;
+  }
+  
+  .caption {
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+  
+  /* Emphasis styles */
+  .text-accent {
+    color: var(--color-accent);
+  }
+  
+  .text-muted {
+    color: var(--color-muted);
+  }
+  
+  .text-gradient {
+    background: linear-gradient(90deg, var(--color-accent), #8a2be2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  /* Link styling */
+  .link-underline {
+    position: relative;
+    text-decoration: none;
+  }
+  
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+  
+  .link-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+  
+  /* Text animation */
+  .text-reveal {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .text-reveal span {
+    display: block;
+    transform: translateY(100%);
+    transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  
+  .text-reveal.revealed span {
+    transform: translateY(0);
+  }
+  
+  /* Code and technical text */
+  code, pre {
+    font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
+    font-size: 0.9em;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.2em 0.4em;
+    border-radius: var(--radius-sm);
+  }
+  
+  /* Responsive heading adjustments */
+  @media (max-width: 768px) {
+    h1, h2, h3, h4 {
+      word-break: break-word;
+    }
+  } 
+  
