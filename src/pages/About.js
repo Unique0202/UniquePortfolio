@@ -10,12 +10,12 @@ const About = () => {
   
   // Skills data
   const skills = [
-    { name: 'UX Design', level: 90 },
-    { name: 'Interaction Design', level: 85 },
-    { name: 'Front-end Development', level: 80 },
-    { name: 'Prototyping', level: 95 },
-    { name: 'AR/VR Development', level: 75 },
-    { name: 'Design Systems', level: 85 }
+    { name: 'UX Design', level: 50 },
+    { name: 'Interaction Design', level: 50 },
+    { name: 'Front-end Development', level: 60 },
+    { name: 'Prototyping', level: 70 },
+    { name: 'Back-end Development', level: 65 },
+    { name: 'Design Systems', level: 60 }
   ];
   
   // Array of refs for each section
@@ -208,10 +208,10 @@ const About = () => {
             <div className="expertise-tags">
               <span className="expertise-tag">UX/UI Design</span>
               <span className="expertise-tag">Interaction Design</span>
-              <span className="expertise-tag">Mixed Reality</span>
-              <span className="expertise-tag">Gesture Controls</span>
+              <span className="expertise-tag">Back-end Development</span>
+              {/* <span className="expertise-tag">Gesture Controls</span>
               <span className="expertise-tag">Voice Interfaces</span>
-              <span className="expertise-tag">Haptic Feedback</span>
+              <span className="expertise-tag">Haptic Feedback</span> */}
               <span className="expertise-tag">Design Systems</span>
               <span className="expertise-tag">Front-end Development</span>
               <span className="expertise-tag">User Testing</span>
