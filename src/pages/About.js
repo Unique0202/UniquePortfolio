@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Award, BookOpen, Code, Cpu, Star, Zap } from 'lucide-react';
 import { useAudio } from '../context/AudioContext';
+import UniquePic from '../assets/UniquePicedit.jpg';
 
 const About = () => {
   const sectionsRef = useRef([]);
@@ -95,13 +96,14 @@ const About = () => {
           <div className="about-header">
             <h1>About Me</h1>
             <p className="lead">
-              I'm an interaction designer focused on creating meaningful digital experiences that bridge the gap between humans and technology.
+            Hey there! I'm Unique, currently pursuing my B.Tech in Computer Science and Design from IIIT-D. With a passion for both programming and design, I strive to create innovative solutions.
+            I'm always eager to connect with fellow enthusiasts, professionals, and anyone passionate about technology and design. Feel free to reach out.
             </p>
           </div>
           
           <div className="about-image">
             <img 
-              src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+              src={UniquePic}
               alt="Working on design projects" 
               className="rounded-image"
             />

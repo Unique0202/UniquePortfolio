@@ -122,13 +122,13 @@ const Home = () => {
           </div>
           
           <div className="social-links">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <a href="https://github.com/Unique0202" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <Github size={20} />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/unique-k-71064a28a/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
               <Linkedin size={20} />
             </a>
-            <a href="mailto:contact@example.com" aria-label="Email">
+            <a href="mailto:uniquek0202@gmail.com" aria-label="Email">
               <Mail size={20} />
             </a>
           </div>

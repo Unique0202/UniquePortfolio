@@ -1,4 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import hoverSound from '../assets/hover.mp3';
+import clickSound from '../assets/click.mp3';
+import popSound from '../assets/pop.mp3';
+// import swooshSound from '../assets/swoosh.mp3';
+// import successSound from '../assets/success.mp3';
+// import messageSound from '../assets/message.mp3';
+// import dropSound from '../assets/drop.mp3';
+// import ambienceSound from '../assets/ambience.mp3';
 
 const AudioContext = createContext();
 
@@ -17,50 +25,37 @@ export const AudioProvider = ({ children }) => {
   
   const [audioElements, setAudioElements] = useState({});
   
-  // Sound effects URLs
+  // Sound effects with imported files
   const soundEffects = {
-    hover: '/sounds/hover.mp3',
-    click: '/sounds/click.mp3',
-    pop: '/sounds/pop.mp3',
-    swoosh: '/sounds/swoosh.mp3',
-    success: '/sounds/success.mp3',
-    message: '/sounds/message.mp3',
-    drop: '/sounds/drop.mp3',
-    ambience: '/sounds/ambience.mp3'
+    hover: hoverSound,
+    click: clickSound,
+    pop: popSound,
+    // swoosh: swooshSound,
+    // success: successSound,
+    // message: messageSound,
+    // drop: dropSound,
+    // ambience: ambienceSound
   };
   
   // Create audio elements for each sound effect
   useEffect(() => {
-    // Mock sound files since we don't have real ones
-    const mockSounds = {
-      hover: 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA',
-      click: 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA',
-      pop: 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA',
-      swoosh: 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA',
-      success: 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA',
-      message: 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA',
-      drop: 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA',
-      ambience: 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA'
-    };
-    
     const elements = {};
     
-    Object.keys(soundEffects).forEach(name => {
-      const audio = new Audio();
-      audio.src = mockSounds[name]; // Using mock data instead of real files
+    Object.entries(soundEffects).forEach(([name, soundSrc]) => {
+      const audio = new Audio(soundSrc);
       audio.volume = volume;
       elements[name] = audio;
       
-      // Loop ambient sound
       if (name === 'ambience') {
         audio.loop = true;
+        // Try to play ambient sound (will fail without user interaction)
+        audio.play().catch(e => console.log('Autoplay blocked:', e));
       }
     });
     
     setAudioElements(elements);
     
     return () => {
-      // Clean up audio elements
       Object.values(elements).forEach(audio => {
         audio.pause();
         audio.src = '';
@@ -68,10 +63,10 @@ export const AudioProvider = ({ children }) => {
     };
   }, []);
   
-  // Update volume for all audio elements when it changes
-  useEffect(() => {
+   // Update volume for all audio elements when it changes
+   useEffect(() => {
     Object.values(audioElements).forEach(audio => {
-      audio.volume = volume;
+      if (audio) audio.volume = volume;
     });
     localStorage.setItem('portfolioVolume', volume.toString());
   }, [volume, audioElements]);
@@ -80,15 +75,12 @@ export const AudioProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('portfolioMuted', isMuted.toString());
     
-    // Start/stop ambient sound based on mute state
     const ambienceAudio = audioElements.ambience;
     if (ambienceAudio) {
       if (isMuted) {
         ambienceAudio.pause();
       } else {
-        ambienceAudio.play().catch(() => {
-          // Autoplay might be blocked, we'll try again on user interaction
-        });
+        ambienceAudio.play().catch(e => console.log('Ambient sound play failed:', e));
       }
     }
   }, [isMuted, audioElements]);
@@ -99,7 +91,7 @@ export const AudioProvider = ({ children }) => {
     
     try {
       // Create a new instance to allow overlapping sounds
-      const sound = audioElements[name].cloneNode();
+      const sound = new Audio(soundEffects[name]);
       sound.volume = volume;
       sound.play().catch(error => {
         console.log('Audio playback error:', error);

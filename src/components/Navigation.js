@@ -43,7 +43,7 @@ const Navigation = () => {
     <nav className={`navigation ${scrolled ? 'scrolled' : ''} ${theme}`}>
       <div className="nav-container">
         <Link to="/" className="logo" onClick={handleLinkClick}>
-          <span className="logo-text">Portfolio</span>
+          <span className="logo-text">Unique's Portfolio</span>
         </Link>
 
         <button 

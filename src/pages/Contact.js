@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Send, MapPin, Phone, Mail, Github, Linkedin, Instagram } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import { useAudio } from '../context/AudioContext';
 
 const Contact = () => {
@@ -24,36 +25,41 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSending(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      if (Math.random() > 0.2) { // 80% success rate for demo
-        setSent(true);
-        playSound('success');
-        
-        // Haptic feedback for success
-        if (navigator.vibrate) {
-          navigator.vibrate([50, 100, 50]);
-        }
-        
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: ''
-        });
-      } else {
-        setError(true);
-        playSound('error');
-        
-        // Haptic feedback for error
-        if (navigator.vibrate) {
-          navigator.vibrate(100);
-        }
+
+    emailjs.sendForm(
+      'service_2nqw5mc',         // Service ID
+      'template_f81b3aa',        // Template ID
+      formRef.current,
+      'MMmQdXHE9G1xWitAg'          // User API Key
+    )
+    .then((result) => {
+      setSent(true);
+      playSound('success');
+      
+      // Haptic feedback for success
+      if (navigator.vibrate) {
+        navigator.vibrate([50, 100, 50]);
       }
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+    }, (error) => {
+      setError(true);
+      playSound('error');
+      
+      // Haptic feedback for error
+      if (navigator.vibrate) {
+        navigator.vibrate(100);
+      }
+    })
+    .finally(() => {
       setSending(false);
-    }, 2000);
+    });
   };
   
   // Reset success/error messages
@@ -185,7 +191,7 @@ const Contact = () => {
                   </div>
                   <div className="info-text">
                     <h3>Location</h3>
-                    <p>San Francisco, CA</p>
+                    <p>New Delhi, India</p>
                   </div>
                 </div>
                 
@@ -195,7 +201,7 @@ const Contact = () => {
                   </div>
                   <div className="info-text">
                     <h3>Phone</h3>
-                    <p>+1 (555) 123-4567</p>
+                    <p>+91 9810215968</p>
                   </div>
                 </div>
                 
@@ -205,7 +211,7 @@ const Contact = () => {
                   </div>
                   <div className="info-text">
                     <h3>Email</h3>
-                    <p>contact@example.com</p>
+                    <p>uniquek0202@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -216,7 +222,7 @@ const Contact = () => {
               
               <div className="social-links">
                 <a 
-                  href="https://github.com" 
+                  href="https://github.com/Unique0202" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   aria-label="GitHub"
@@ -228,7 +234,7 @@ const Contact = () => {
                 </a>
                 
                 <a 
-                  href="https://linkedin.com" 
+                  href="https://www.linkedin.com/in/unique-k-71064a28a/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   aria-label="LinkedIn"
@@ -240,7 +246,7 @@ const Contact = () => {
                 </a>
                 
                 <a 
-                  href="https://instagram.com" 
+                  href="https://www.instagram.com/unique.02.02/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   aria-label="Instagram"
@@ -258,7 +264,7 @@ const Contact = () => {
               
               <div className="qr-code">
                 <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/vcard" 
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.linkedin.com/in/unique-k-71064a28a/" 
                   alt="Contact QR Code" 
                   loading="lazy"
                 />
@@ -268,6 +274,8 @@ const Contact = () => {
           </div>
         </div>
       </div>
+
+
       
       <style jsx>{`
         .contact-page {
