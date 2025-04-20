@@ -2,6 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useAudio } from '../context/AudioContext';
+import AMS1 from '../assets/ams1.jpg';
+import AMS2 from '../assets/ams2.png';
+import AMS3 from '../assets/ams3.png';
+import AMS4 from '../assets/ams4.png';
+import AB1 from '../assets/ab1.jpg';
+import AB2 from '../assets/ab2.png';
+import AB3 from '../assets/ab3.png';
+import AB4 from '../assets/ab4.png';
+import AB5 from '../assets/ab5.png';
+import AB6 from '../assets/ab6.png';
+import AB7 from '../assets/ab7.png';
+
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -14,39 +26,42 @@ const ProjectDetail = () => {
   // Mock project data
   useEffect(() => {
     const projectsData = {
-      'ar-interface': {
-        title: 'Augmented Reality Interface',
-        category: 'Mixed Reality',
-        description: 'An exploration of spatial interfaces that blend digital and physical environments through gesture recognition and contextual awareness.',
-        overview: 'This project explores the potential of augmented reality as a new paradigm for human-computer interaction. The interface overlays digital information onto the physical world, creating a seamless blend of virtual and real environments. Users can interact with digital content through natural gestures, voice commands, and contextual triggers.',
-        challenge: 'The main challenge was creating an intuitive system that feels natural and doesn\'t require extensive learning. Additionally, ensuring the interface adapts to different environments and lighting conditions posed significant technical hurdles.',
-        approach: 'I approached this by first conducting extensive user research to understand how people naturally interact with physical objects. From there, I developed a gestural language that leveraged existing mental models. The interface uses computer vision to recognize objects and environments, allowing it to adapt its presentation accordingly.',
-        outcome: 'The resulting system enables users to interact with digital content in a more natural and intuitive way. User testing showed a 40% reduction in task completion time compared to traditional interfaces for similar tasks. The project has been featured in several design exhibitions and has received positive feedback from the AR/VR community.',
-        mainImageUrl: 'https://images.pexels.com/photos/6633920/pexels-photo-6633920.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'airport-management-system': {
+        title: 'Airport Management System',
+        category: 'Full Stack Website',
+        description: 'A full-stack airport management system enabling users to book facilities and view real-time flight details via an interactive interface.',
+        overview: 'This project streamlines airport experience by allowing users to book lounges, shops, gyms, and other services online. It includes dedicated portals for users, staff, managers, and an admin for complete control. Users can also access live flight information including gate and terminal details. Built with React, JavaScript, CSS, PostgreSQL, and Python, the platform ensures efficient facility and flight management.',
+        challenge: 'Managing different user roles with varying access levels and syncing real-time flight updates with facility bookings posed integration challenges. Ensuring smooth communication between the backend and frontend while maintaining database integrity was critical to the system’s performance and reliability.',
+        approach: 'I started by identifying common issues travelers face at airports regarding facility bookings. Then, I designed role-based user interfaces for passengers, staff, and admins. The backend was developed using Python with RESTful routes, and the frontend using React. PostgreSQL handled data storage, and I ensured smooth integration between all components through testing, feedback, and iterative development.',
+        outcome: 'The system offers a seamless experience for passengers and staff alike, simplifying facility bookings and flight tracking. Role-based access ensures secure and efficient management of services. Successfully implemented using a full-stack approach, this project enhanced user experience and demonstrated strong backend-frontend integration, making it a scalable solution for modern airports.',
+        mainImageUrl: AMS1,
         gallery: [
-          'https://images.pexels.com/photos/6633919/pexels-photo-6633919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-          'https://images.pexels.com/photos/6633911/pexels-photo-6633911.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-          'https://images.pexels.com/photos/6633906/pexels-photo-6633906.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+          AMS2,
+          AMS3,
+          AMS4
         ],
-        toolsUsed: ['Unity', 'ARKit', 'Figma', 'Blender', 'C#'],
+        toolsUsed: ['React', 'JavaScript', 'CSS', 'PostgreSQL', 'Python', 'REST APIs', 'GitHub', 'Node.js (for routing)', 'VS Code'],
         liveUrl: '#',
         year: '2023'
       },
-      'multimodal-dashboard': {
-        title: 'Multimodal Dashboard',
-        category: 'Voice Interaction',
-        description: 'A dashboard that combines visual, voice, and touch interactions to create an accessible and efficient user experience.',
-        overview: 'The Multimodal Dashboard project reimagines how users interact with complex data sets by combining multiple interaction modalities. It allows users to navigate, filter, and analyze data through voice commands, touch gestures, and traditional inputs, creating a more flexible and accessible experience.',
-        challenge: 'The primary challenge was integrating multiple input methods in a way that felt cohesive rather than disjointed. Additionally, ensuring the voice recognition component could handle domain-specific terminology while remaining accurate posed significant technical challenges.',
-        approach: 'I adopted a user-centered design process, conducting extensive interviews with potential users to understand their workflows and pain points. The design evolved through multiple iterations, with each prototype tested with real users. For the technical implementation, I used a modular architecture that allowed each interaction modality to seamlessly coordinate with the others.',
-        outcome: 'The final product significantly improved both efficiency and accessibility. User testing showed that the multimodal approach reduced task completion time by 35% compared to traditional dashboards. The voice component has proven particularly valuable for users with motor impairments and for scenarios where hands-free operation is beneficial.',
-        mainImageUrl: 'https://images.pexels.com/photos/5077393/pexels-photo-5077393.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'angry-birds': {
+        title: 'Angry Birds Game',
+        category: 'Interactive Game',
+        description: 'A multi-level LibGDX game with interactive UI, level saving/loading, and touch-based controls built using Java and Gradle.',
+        overview: 'This game project replicates the Angry Birds-style gameplay with multiple levels, each featuring unique backgrounds and textures. It includes a functional UI with buttons for play, pause, load, settings, and saving progress. Players can select levels, save progress, and resume gameplay. Designed using LibGDX and Java, it showcases proficiency in game logic, UI design, and input handling.',
+        challenge: 'Implementing smooth transitions between screens, managing game states like pause and resume, and saving/loading levels dynamically were major hurdles. Handling responsive UI for different resolutions and maintaining level data integrity across sessions required thoughtful logic and testing.',
+        approach: 'I began by setting up a LibGDX project with Gradle. Designed separate screens for main menu, level selection, and gameplay. Used input adapters to manage user interaction. Implemented a save/load system and structured level rendering with different assets. Focused on clean code structure, reusable components, and smooth state transitions between screens for an optimal gaming experience.',
+        outcome: 'Successfully built a modular, interactive game with clean UI and seamless navigation across levels. The save/load mechanism and level progression system enhanced user engagement. The project demonstrates strong game development skills, event-driven programming, and UI/UX understanding in a LibGDX environment, making it a valuable addition to my portfolio.',
+        mainImageUrl: AB1,
         gallery: [
-          'https://images.pexels.com/photos/5077047/pexels-photo-5077047.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-          'https://images.pexels.com/photos/5077045/pexels-photo-5077045.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-          'https://images.pexels.com/photos/5077069/pexels-photo-5077069.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+          AB2,
+          AB3,
+          AB4,
+          AB5,
+          AB6,
+          AB7
         ],
-        toolsUsed: ['React', 'D3.js', 'TensorFlow.js', 'Web Speech API', 'Figma'],
+        toolsUsed: ['Java', 'LibGDX', 'Gradle', 'IntelliJ IDEA', 'Scene2D UI', 'GitHub', 'JSON(for save/load)'],
         liveUrl: '#',
         year: '2022'
       },

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Filter, Search, X } from 'lucide-react';
 import ProjectCard from '../components/ProjectCard';
 import { useAudio } from '../context/AudioContext';
+import AMS1 from '../assets/ams1.jpg';
+import AB1 from '../assets/ab1.jpg';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -13,23 +15,23 @@ const Projects = () => {
   const categoryRef = useRef(null);
   const { playSound } = useAudio();
   
-  // Mock projects data
+  // projects data
   useEffect(() => {
     const projectsData = [
       {
-        id: 'ar-interface',
-        title: 'Augmented Reality Interface',
-        category: 'Mixed Reality',
-        description: 'An exploration of spatial interfaces that blend digital and physical environments through gesture recognition and contextual awareness.',
-        imageUrl: 'https://images.pexels.com/photos/6633920/pexels-photo-6633920.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        id: 'airport-management-system',
+        title: 'Airport Management System',
+        category: 'Full Stack Website',
+        description: 'A full-stack airport management system enabling users to book facilities and view real-time flight details via an interactive interface.',
+        imageUrl: AMS1,
         liveUrl: '#'
       },
       {
-        id: 'multimodal-dashboard',
-        title: 'Multimodal Dashboard',
-        category: 'Voice Interaction',
-        description: 'A dashboard that combines visual, voice, and touch interactions to create an accessible and efficient user experience.',
-        imageUrl: 'https://images.pexels.com/photos/5077393/pexels-photo-5077393.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        id: 'angry-birds',
+        title: 'Angry Birds Game',
+        category: 'Interactive Game',
+        description: 'A multi-level LibGDX game with interactive UI, level saving/loading, and touch-based controls built using Java and Gradle.',
+        imageUrl: AB1,
         liveUrl: '#'
       },
       {

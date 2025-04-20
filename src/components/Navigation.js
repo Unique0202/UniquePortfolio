@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAudio } from '../context/AudioContext';
 
@@ -8,8 +8,9 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
   const { playSound } = useAudio();
+  const { theme, toggleTheme } = useTheme(); // Now using toggleTheme
 
   const links = [
     { name: 'Home', path: '/' },
@@ -17,6 +18,11 @@ const Navigation = () => {
     { name: 'Projects', path: '/projects' },
     { name: 'Contact', path: '/contact' }
   ];
+  const handleThemeToggle = () => {
+    toggleTheme();
+    playSound('click');
+    if (navigator.vibrate) navigator.vibrate(15);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,18 +52,6 @@ const Navigation = () => {
           <span className="logo-text">Unique's Portfolio</span>
         </Link>
 
-        <button 
-          className="menu-toggle" 
-          onClick={() => {
-            setIsOpen(!isOpen);
-            playSound('swoosh');
-            if (navigator.vibrate) navigator.vibrate(20);
-          }}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
         <div className={`nav-links ${isOpen ? 'open' : ''}`}>
           {links.map((link, index) => (
             <Link
@@ -70,6 +64,19 @@ const Navigation = () => {
               {link.name}
             </Link>
           ))}
+          
+          {/* Add theme toggle button */}
+          <button 
+            className="theme-toggle"
+            onClick={handleThemeToggle}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? (
+              <Sun size={20} className="theme-icon" />
+            ) : (
+              <Moon size={20} className="theme-icon" />
+            )}
+          </button>
         </div>
       </div>
 
@@ -199,6 +206,41 @@ const Navigation = () => {
             opacity: 0.7;
             transform: translateY(0);
             animation: slideInUp 0.5s forwards;
+          }
+        }
+           .theme-toggle {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          padding: var(--space-2);
+          margin-left: var(--space-4);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text);
+          transition: transform 0.3s ease;
+          position: relative;
+          top: -5px;
+        }
+        
+        .theme-toggle:hover {
+          transform: scale(1.1);
+        }
+        
+        .theme-icon {
+          transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+          .theme-toggle {
+            margin-top: var(--space-4);
+            margin-left: 0;
+            padding: var(--space-3);
+          }
+          
+          .theme-icon {
+            width: 24px;
+            height: 24px;
           }
         }
       `}</style>
