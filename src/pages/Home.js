@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, Github, Linkedin, Mail, ArrowRight } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAudio } from '../context/AudioContext';
+import AMS1 from '../assets/ams1.jpg'; 
+import AB1 from '../assets/ab1.jpg';
+import UniquePic2 from '../assets/UniquePic2.png'; 
 
 const Home = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -174,7 +177,7 @@ const Home = () => {
             
             <div className="intro-image">
               <img 
-                src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                src={UniquePic2} 
                 alt="Working on design project" 
                 loading="lazy"
                 className="rounded-image"
@@ -201,19 +204,18 @@ const Home = () => {
             <div className="featured-project">
               <div className="project-preview">
                 <img 
-                  src="https://images.pexels.com/photos/6633920/pexels-photo-6633920.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                  alt="Augmented Reality Interface" 
+                  src={AMS1} 
+                  alt="AIRPORT MANAGEMENT SYSTEM" 
                   loading="lazy"
                 />
               </div>
               <div className="project-info">
-                <span className="project-category">Mixed Reality</span>
-                <h3>Augmented Reality Interface</h3>
+                <span className="project-category">Full Stack Website</span>
+                <h3>AIRPORT MANAGEMENT SYSTEM</h3>
                 <p>
-                  An exploration of spatial interfaces that blend digital and physical environments
-                  through gesture recognition and contextual awareness.
+                A full-stack airport management system enabling users to book facilities and view real-time flight details via an interactive interface.
                 </p>
-                <Link to="/projects/ar-interface" className="view-project">
+                <Link to="/projects/airport-management-system" className="view-project">
                   View Project
                   <ArrowRight size={16} />
                 </Link>
@@ -223,19 +225,18 @@ const Home = () => {
             <div className="featured-project reversed">
               <div className="project-preview">
                 <img 
-                  src="https://images.pexels.com/photos/5077393/pexels-photo-5077393.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                  alt="Voice Interactive Dashboard" 
+                  src={AB1} 
+                  alt="ANGRY BIRDS" 
                   loading="lazy"
                 />
               </div>
               <div className="project-info">
-                <span className="project-category">Voice Interaction</span>
-                <h3>Multimodal Dashboard</h3>
+                <span className="project-category">Interactive Game</span>
+                <h3>ANGRY BIRDS GAME</h3>
                 <p>
-                  A dashboard that combines visual, voice, and touch interactions to create
-                  an accessible and efficient user experience.
+                A multi-level LibGDX game with interactive UI, level saving/loading, and touch-based controls built using Java and Gradle.
                 </p>
-                <Link to="/projects/multimodal-dashboard" className="view-project">
+                <Link to="/projects/angry-birds" className="view-project">
                   View Project
                   <ArrowRight size={16} />
                 </Link>
