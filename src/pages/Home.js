@@ -103,11 +103,13 @@ const Home = () => {
       >
         <div className="container hero-content">
           <h1 className="text-reveal revealed">
-            <span>Interactive</span> <span className="text-accent">Design</span> <span>Portfolio</span>
+            <span>Imagine</span> <span className="text-accent">Design</span> <span>Build</span>
           </h1>
           
           <p className="lead">
-            Exploring multimodal interactions and innovative user experiences.
+          Merging creative design with technical precision to build seamless, human-centered digital interactions. I’m Unique—a CS & Design engineer exploring the future of tech experiences.
+
+
           </p>
           
           <div className="hero-cta">

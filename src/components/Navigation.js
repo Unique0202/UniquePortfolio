@@ -51,7 +51,18 @@ const Navigation = () => {
         <Link to="/" className="logo" onClick={handleLinkClick}>
           <span className="logo-text">Unique's Portfolio</span>
         </Link>
-
+      {/* Add this hamburger menu button */}
+      <button 
+        className="menu-toggle" 
+        onClick={() => {
+          setIsOpen(!isOpen);
+          playSound('swoosh');
+          if (navigator.vibrate) navigator.vibrate(20);
+        }}
+        aria-label={isOpen ? "Close menu" : "Open menu"}
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
         <div className={`nav-links ${isOpen ? 'open' : ''}`}>
           {links.map((link, index) => (
             <Link

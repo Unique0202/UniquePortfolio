@@ -98,7 +98,7 @@ const ProjectCard = ({ project, index }) => {
               alt="QR Code" 
               className="qr-code"
             />
-            <span>Scan for AR view</span>
+            <span>Scan for GitHub Repo</span>
           </div>
         )}
       </div>

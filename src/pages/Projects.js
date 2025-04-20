@@ -4,6 +4,7 @@ import ProjectCard from '../components/ProjectCard';
 import { useAudio } from '../context/AudioContext';
 import AMS1 from '../assets/ams1.jpg';
 import AB1 from '../assets/ab1.jpg';
+import FOS1 from '../assets/fos1.jpg';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -35,35 +36,11 @@ const Projects = () => {
         liveUrl: '#'
       },
       {
-        id: 'gesture-controller',
-        title: 'Gesture Control System',
-        category: 'Motion Sensing',
-        description: 'A system that interprets hand movements to control digital interfaces without physical contact.',
-        imageUrl: 'https://images.pexels.com/photos/4144179/pexels-photo-4144179.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        liveUrl: '#'
-      },
-      {
-        id: 'audio-visualization',
-        title: 'Audio Visualization Tool',
-        category: 'Sound Design',
-        description: 'An interactive tool that transforms audio input into compelling visual representations.',
-        imageUrl: 'https://images.pexels.com/photos/1649771/pexels-photo-1649771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        liveUrl: '#'
-      },
-      {
-        id: 'haptic-feedback',
-        title: 'Haptic Feedback System',
-        category: 'Tactile Design',
-        description: 'A system that provides realistic touch sensations in digital environments through vibration patterns.',
-        imageUrl: 'https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        liveUrl: '#'
-      },
-      {
-        id: 'adaptive-interface',
-        title: 'Context-Aware Interface',
-        category: 'Adaptive Design',
-        description: 'An interface that adapts its appearance and functionality based on user behavior, time of day, and location.',
-        imageUrl: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        id: 'food-ordering-system',
+        title: 'Food Ordering System',
+        category: 'Application',
+        description: 'A Java-based food ordering system supporting admin and customer roles with robust menu, order, and sales management features.',
+        imageUrl: FOS1,
         liveUrl: '#'
       }
     ];

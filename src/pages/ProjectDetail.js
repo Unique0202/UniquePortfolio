@@ -13,6 +13,7 @@ import AB4 from '../assets/ab4.png';
 import AB5 from '../assets/ab5.png';
 import AB6 from '../assets/ab6.png';
 import AB7 from '../assets/ab7.png';
+import FOS1 from '../assets/fos1.jpg';
 
 
 const ProjectDetail = () => {
@@ -42,7 +43,7 @@ const ProjectDetail = () => {
         ],
         toolsUsed: ['React', 'JavaScript', 'CSS', 'PostgreSQL', 'Python', 'REST APIs', 'GitHub', 'Node.js (for routing)', 'VS Code'],
         liveUrl: '#',
-        year: '2023'
+        year: '2025'
       },
       'angry-birds': {
         title: 'Angry Birds Game',
@@ -63,9 +64,24 @@ const ProjectDetail = () => {
         ],
         toolsUsed: ['Java', 'LibGDX', 'Gradle', 'IntelliJ IDEA', 'Scene2D UI', 'GitHub', 'JSON(for save/load)'],
         liveUrl: '#',
-        year: '2022'
+        year: '2024'
       },
-      // Add more projects as needed
+      'food-ordering-system': {
+        title: 'Food Ordering System',
+        category: 'Application',
+        description: 'A Java-based food ordering system supporting admin and customer roles with robust menu, order, and sales management features.',
+        overview: 'ByteMe is a full-fledged food ordering application that supports both admin and customer functionalities. Admins can manage menus, process orders, handle refunds, and generate reports. Customers can log in, place orders, and track order history. The system applies core Java concepts like OOP, collections, file I/O, and exception handling, and is backed by JUnit tests for reliability.',
+        challenge: 'Managing complex admin-customer interactions and maintaining data consistency across sessions required meticulous design. Implementing secure login, file-based data handling, and testing corner cases such as invalid orders or empty inventories were particularly challenging and needed robust exception handling and logic validation.',
+        approach: 'The project began with defining core user roles and their requirements. Classes were built using OOP principles like inheritance and encapsulation. Java collections managed in-memory data, while file I/O handled persistence. Lambda expressions streamlined data processing. Exception handling was added to improve user experience. JUnit tests validated the system’s reliability under various usage scenarios.',
+        outcome: 'Successfully developed a maintainable and modular food ordering system with a clear role-based structure. Users can easily place and manage orders, while admins efficiently oversee operations. The use of object-oriented principles and Java features made the system scalable and reliable, with JUnit test coverage ensuring code correctness and resilience against edge cases.',
+        mainImageUrl: FOS1,
+        gallery: [
+          FOS1,
+        ],
+        toolsUsed: ['Java', 'OOP', 'HashMap', 'ArrayList', 'File I/O', 'Lambda', 'Streams', 'Exception Handling', 'JUnit 5', 'Maven', 'IntelliJ IDEA'],
+        liveUrl: '#',
+        year: '2024'
+      },
     };
     
     setTimeout(() => {
