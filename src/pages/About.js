@@ -220,51 +220,51 @@ const About = () => {
           </div>
         </section>
         
-        {/* Journey Section */}
-        <section 
-          ref={el => sectionsRef.current[3] = el}
-          className={`about-journey ${activeSection === 3 ? 'active' : ''}`}
-        >
-          <h2>My Journey</h2>
-          
-          <div className="timeline">
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-content">
-                <div className="timeline-date">2023 - Present</div>
-                <h3>Interaction Design Lead</h3>
-                <p>Leading projects focused on multimodal interaction systems and mixed reality experiences.</p>
-              </div>
-            </div>
-            
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-content">
-                <div className="timeline-date">2021 - 2023</div>
-                <h3>Senior UX Designer</h3>
-                <p>Developed context-aware interfaces and gesture-based interaction systems for digital products.</p>
-              </div>
-            </div>
-            
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-content">
-                <div className="timeline-date">2018 - 2021</div>
-                <h3>UX/UI Designer</h3>
-                <p>Created user-centered designs for web and mobile applications with a focus on accessibility.</p>
-              </div>
-            </div>
-            
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-content">
-                <div className="timeline-date">2016 - 2018</div>
-                <h3>Master's in Interaction Design</h3>
-                <p>Specialized in multimodal interfaces and cognitive aspects of human-computer interaction.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+{/* Journey Section */}
+<section 
+  ref={el => sectionsRef.current[3] = el}
+  className={`about-journey ${activeSection === 3 ? 'active' : ''}`}
+>
+  <h2>My Journey</h2>
+  
+  <div className="timeline">
+    <div className="timeline-item">
+      <div className="timeline-marker"></div>
+      <div className="timeline-content">
+        <div className="timeline-date">2023 - Present</div>
+        <h3>BTech in Computer Science & Design</h3>
+        <p>Currently in my 2nd year at IIIT-Delhi, exploring full-stack development, UI/UX design, and software engineering fundamentals.</p>
+      </div>
+    </div>
+    
+    <div className="timeline-item">
+      <div className="timeline-marker"></div>
+      <div className="timeline-content">
+        <div className="timeline-date">2022 - 2023</div>
+        <h3>JEE Preparation Phase</h3>
+        <p>Dedicated year to mastering Physics, Chemistry, and Mathematics for engineering entrance examinations.</p>
+      </div>
+    </div>
+    
+    <div className="timeline-item">
+      <div className="timeline-marker"></div>
+      <div className="timeline-content">
+        <div className="timeline-date">2020 - 2022</div>
+        <h3>Higher Secondary Education</h3>
+        <p>Completed 12th grade in Science stream with Computer Science, laying foundation for technical career.</p>
+      </div>
+    </div>
+    
+    <div className="timeline-item">
+      <div className="timeline-marker"></div>
+      <div className="timeline-content">
+        <div className="timeline-date">Future Aspirations</div>
+        <h3>Full-Stack Developer</h3>
+        <p>Working towards mastering both frontend and backend technologies to build complete, scalable web applications.</p>
+      </div>
+    </div>
+  </div>
+</section>
       </div>
       
       <style jsx>{`
