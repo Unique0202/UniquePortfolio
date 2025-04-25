@@ -317,7 +317,7 @@ const ProjectDetail = () => {
                 </div>
               )}
               
-              <div className="sidebar-section qr-section">
+              {/* <div className="sidebar-section qr-section">
                 <h3>View in AR</h3>
                 <div className="qr-code">
                   <img 
@@ -327,7 +327,7 @@ const ProjectDetail = () => {
                   />
                   <p>Scan to view in augmented reality</p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
