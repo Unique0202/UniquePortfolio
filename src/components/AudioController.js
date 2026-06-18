@@ -109,7 +109,7 @@ const AudioController = () => {
         }
 
         @media (max-width: 768px) {
-          .audio-ctrl { bottom: 10px; right: 10px; }
+          .audio-ctrl { bottom: 72px; right: 12px; }
         }
       `}</style>
     </div>
