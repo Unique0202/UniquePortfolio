@@ -198,19 +198,19 @@ const Projects = () => {
           gap: 7px;
           padding: 7px 18px;
           border-radius: var(--radius-full);
-          border: 1px solid rgba(255,255,255,0.09);
+          border: 1px solid var(--glass-border);
           background: transparent;
           font-family: var(--font-mono);
           font-size: 0.72rem;
           letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.42);
+          color: var(--glass-text-mid);
           cursor: pointer;
           transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
           white-space: nowrap;
         }
         .filter-tab:hover {
-          color: rgba(255,255,255,0.72);
-          border-color: rgba(255,255,255,0.18);
+          color: var(--glass-text-hi);
+          border-color: var(--glass-border-mid);
         }
         .filter-tab.active {
           color: #fff;

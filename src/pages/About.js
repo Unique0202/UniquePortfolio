@@ -335,7 +335,7 @@ const About = () => {
           position: relative;
           border-radius: var(--radius-lg);
           overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.08);
+          border: 1px solid var(--glass-border);
         }
 
         .about-image::before {
@@ -363,8 +363,8 @@ const About = () => {
         }
 
         .philo-card {
-          background: rgba(255,255,255,0.028);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-lg);
           padding: var(--space-3);
           cursor: default;
@@ -398,7 +398,7 @@ const About = () => {
 
         .philo-body {
           font-size: 0.86rem;
-          color: rgba(255,255,255,0.45);
+          color: var(--glass-text-mid);
           line-height: 1.65;
           margin: 0;
         }
@@ -420,7 +420,7 @@ const About = () => {
         .skill-name {
           font-size: 0.9rem;
           font-weight: 600;
-          color: rgba(255,255,255,0.75);
+          color: var(--glass-text-hi);
         }
 
         .skill-pct {
@@ -433,7 +433,7 @@ const About = () => {
         .skill-track {
           width: 100%;
           height: 4px;
-          background: rgba(255,255,255,0.07);
+          background: var(--glass-border);
           border-radius: var(--radius-full);
           overflow: hidden;
         }
@@ -455,8 +455,8 @@ const About = () => {
           display: flex;
           align-items: flex-start;
           gap: 16px;
-          background: rgba(255,255,255,0.028);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-lg);
           padding: var(--space-3);
           transition: border-color 0.25s ease;
@@ -485,7 +485,7 @@ const About = () => {
         .award-body {
           margin: 0;
           font-size: 0.86rem;
-          color: rgba(255,255,255,0.45);
+          color: var(--glass-text-mid);
           line-height: 1.6;
         }
 
@@ -525,8 +525,8 @@ const About = () => {
         }
 
         .tl-card {
-          background: rgba(255,255,255,0.028);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-lg);
           padding: 20px var(--space-3);
           transition: border-color 0.25s ease;
@@ -554,7 +554,7 @@ const About = () => {
         .tl-body {
           margin: 0;
           font-size: 0.875rem;
-          color: rgba(255,255,255,0.45);
+          color: var(--glass-text-mid);
           line-height: 1.65;
         }
 

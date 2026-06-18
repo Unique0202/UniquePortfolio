@@ -80,8 +80,8 @@ const ProjectCard = ({ project, index = 0 }) => {
       <style jsx>{`
         .project-card {
           position: relative;
-          background: rgba(255,255,255,0.028);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-lg);
           overflow: hidden;
           transform-style: preserve-3d;
@@ -211,7 +211,7 @@ const ProjectCard = ({ project, index = 0 }) => {
 
         .card-desc {
           font-size: 0.875rem;
-          color: rgba(255,255,255,0.45);
+          color: var(--glass-text-mid);
           line-height: 1.65;
           margin-bottom: 14px;
         }
@@ -227,8 +227,8 @@ const ProjectCard = ({ project, index = 0 }) => {
           font-family: var(--font-mono);
           font-size: 0.58rem;
           letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.38);
-          border: 1px solid rgba(255,255,255,0.09);
+          color: var(--glass-text-lo);
+          border: 1px solid var(--glass-border);
           padding: 2px 8px;
           border-radius: var(--radius-full);
         }
@@ -243,12 +243,12 @@ const ProjectCard = ({ project, index = 0 }) => {
           font-family: var(--font-mono);
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.65);
+          color: var(--glass-text);
           text-decoration: none;
           padding: 8px 16px;
-          border: 1px solid rgba(255,255,255,0.13);
+          border: 1px solid var(--glass-border-mid);
           border-radius: var(--radius-full);
-          background: rgba(255,255,255,0.035);
+          background: var(--glass-bg);
           transition: color 0.22s ease,
                       border-color 0.22s ease,
                       background 0.22s ease,

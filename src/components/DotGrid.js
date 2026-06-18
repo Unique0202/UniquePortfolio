@@ -5,8 +5,6 @@ const DOT_R      = 1.3;  // dot radius
 const PULL_R     = 140;  // cursor influence radius
 const MAX_SHIFT  = 18;   // max px a dot moves
 const LERP       = 0.1;  // spring speed (0 = no follow, 1 = instant)
-const DOT_COLOR  = 'rgba(255,255,255,0.11)';
-
 const DotGrid = () => {
   const canvasRef = useRef(null);
 
@@ -41,6 +39,8 @@ const DotGrid = () => {
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const rgb = getComputedStyle(document.documentElement).getPropertyValue('--dot-color-rgb').trim() || '255,255,255';
+      const dotColor = `rgba(${rgb},0.11)`;
       for (const d of dots) {
         const dx   = mouse.x - d.ox;
         const dy   = mouse.y - d.oy;
@@ -56,7 +56,7 @@ const DotGrid = () => {
 
         ctx.beginPath();
         ctx.arc(d.cx, d.cy, DOT_R, 0, Math.PI * 2);
-        ctx.fillStyle = DOT_COLOR;
+        ctx.fillStyle = dotColor;
         ctx.fill();
       }
       animId = requestAnimationFrame(draw);

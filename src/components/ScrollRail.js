@@ -26,7 +26,7 @@ const ScrollRail = () => {
         .scroll-rail-track {
           position: absolute;
           inset: 0;
-          background: rgba(255,255,255,0.08);
+          background: var(--glass-border);
           border-radius: 2px;
         }
         .scroll-rail-fill {

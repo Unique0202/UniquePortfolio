@@ -475,8 +475,8 @@ const Home = () => {
           letter-spacing: 0.1em;
           text-transform: uppercase;
           color: var(--color-muted);
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--glass-bg-2);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-full);
           padding: 6px 14px;
           z-index: 2;
@@ -588,9 +588,9 @@ const Home = () => {
           left: 0;
           right: 0;
           overflow: hidden;
-          border-top: 1px solid rgba(255,255,255,0.07);
-          border-bottom: 1px solid rgba(255,255,255,0.07);
-          background: rgba(255,255,255,0.018);
+          border-top: 1px solid var(--glass-border);
+          border-bottom: 1px solid var(--glass-border);
+          background: var(--glass-bg);
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
           padding: 10px 0;
@@ -634,12 +634,12 @@ const Home = () => {
         }
         .intro-bio-col {
           padding-left: var(--space-4);
-          border-left: 1px solid rgba(255,255,255,0.08);
+          border-left: 1px solid var(--glass-border);
         }
         .intro-bio {
           font-size: 1rem;
           line-height: 1.8;
-          color: rgba(232, 232, 240, 0.72);
+          color: var(--glass-text);
           margin-bottom: var(--space-4);
           max-width: 38ch;
         }
@@ -662,12 +662,12 @@ const Home = () => {
         }
         .cta-btn.primary:hover { background: #d13652; transform: translateY(-1px); }
         .cta-btn.secondary {
-          border: 1px solid rgba(255,255,255,0.12);
+          border: 1px solid var(--glass-border-mid);
           color: var(--text);
         }
         .cta-btn.secondary:hover {
-          border-color: rgba(255,255,255,0.25);
-          background: rgba(255,255,255,0.04);
+          border-color: var(--glass-border-hi);
+          background: var(--glass-bg-hover);
         }
 
         /* ── Bento ──────────────────────────────────────────────────────── */
@@ -698,7 +698,7 @@ const Home = () => {
           position: relative;
           overflow: hidden;
           border-radius: var(--radius-lg);
-          border: 1px solid rgba(255,255,255,0.07);
+          border: 1px solid var(--glass-border);
         }
         /* Red border wipe */
         .bento-cell::after {
@@ -754,12 +754,12 @@ const Home = () => {
           font-family: var(--font-mono);
           font-size: 0.65rem;
           letter-spacing: 0.14em;
-          color: rgba(255,255,255,0.55);
+          color: var(--glass-text);
           z-index: 2;
           background: rgba(0,0,0,0.35);
           padding: 2px 7px;
           border-radius: var(--radius-sm);
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid var(--glass-border);
         }
 
         .bento-content {
@@ -775,7 +775,7 @@ const Home = () => {
           font-size: 0.62rem;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.42);
+          color: var(--glass-text-mid);
           margin-bottom: 5px;
         }
         /* Hide sub-description on the compact right cells — too cramped */
@@ -798,8 +798,8 @@ const Home = () => {
           font-family: var(--font-mono);
           font-size: 0.58rem;
           letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.5);
-          border: 1px solid rgba(255,255,255,0.14);
+          color: var(--glass-text-mid);
+          border: 1px solid var(--glass-border-mid);
           padding: 2px 8px;
           border-radius: var(--radius-full);
         }
@@ -813,12 +813,12 @@ const Home = () => {
           height: 30px;
           border-radius: 50%;
           background: rgba(0,0,0,0.4);
-          border: 1px solid rgba(255,255,255,0.12);
+          border: 1px solid var(--glass-border-mid);
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 0.85rem;
-          color: rgba(255,255,255,0.6);
+          color: var(--glass-text);
           z-index: 2;
           transition: background 0.22s ease, color 0.22s ease,
                       border-color 0.22s ease, transform 0.3s var(--ease-out-expo);
@@ -844,17 +844,17 @@ const Home = () => {
           font-size: 0.68rem;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.6);
+          color: var(--glass-text);
           text-decoration: none;
           padding: 7px 16px;
-          border: 1px solid rgba(255,255,255,0.12);
+          border: 1px solid var(--glass-border-mid);
           border-radius: var(--radius-full);
           transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
         }
         .bento-view-all:hover {
           color: #fff;
-          border-color: rgba(255,255,255,0.28);
-          background: rgba(255,255,255,0.05);
+          border-color: var(--glass-border-hi);
+          background: var(--glass-bg-hover);
         }
         .bento-va-arrow {
           display: inline-block;
@@ -874,7 +874,7 @@ const Home = () => {
           font-family: var(--font-mono);
           font-size: 0.68rem;
           letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.6);
+          color: var(--glass-text);
           margin-bottom: var(--space-4);
         }
         .achievement-star {
@@ -890,8 +890,8 @@ const Home = () => {
           margin-bottom: var(--space-5);
         }
         .stat-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass-bg-2);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-lg);
           padding: var(--space-4) var(--space-3);
           text-align: center;
@@ -916,7 +916,7 @@ const Home = () => {
           font-size: 0.65rem;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.58);
+          color: var(--glass-text);
           margin-bottom: 4px;
         }
         .stat-sub {
@@ -931,7 +931,7 @@ const Home = () => {
         /* Tech stack */
         .skills-wrap {
           padding-top: var(--space-4);
-          border-top: 1px solid rgba(255,255,255,0.05);
+          border-top: 1px solid var(--glass-border);
         }
         .skills-eyebrow {
           font-family: var(--font-mono);
@@ -951,11 +951,11 @@ const Home = () => {
           font-family: var(--font-mono);
           font-size: 0.72rem;
           letter-spacing: 0.04em;
-          color: rgba(255,255,255,0.52);
+          color: var(--glass-text);
           padding: 6px 14px;
-          border: 1px solid rgba(255,255,255,0.09);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-full);
-          background: rgba(255,255,255,0.025);
+          background: var(--glass-bg);
           transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
           cursor: default;
         }
@@ -978,7 +978,7 @@ const Home = () => {
         .progress-track {
           position: absolute;
           inset: 0;
-          background: rgba(255,255,255,0.08);
+          background: var(--glass-border);
           border-radius: 2px;
         }
         .progress-fill {

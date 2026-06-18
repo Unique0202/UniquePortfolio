@@ -146,13 +146,17 @@ const Navigation = () => {
           display: flex;
           align-items: center;
           gap: 0;
-          background: rgba(10, 10, 16, 0.85);
-          backdrop-filter: blur(5px);
-          -webkit-backdrop-filter: blur(5px);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(10, 10, 16, 0.45);
+          backdrop-filter: blur(24px) saturate(160%);
+          -webkit-backdrop-filter: blur(24px) saturate(160%);
+          border: 1px solid rgba(255, 255, 255, 0.12);
           border-radius: var(--radius-full);
           padding: 6px 8px 6px 6px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255,255,255,0.04) inset;
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.35),
+            0 1px 0 rgba(255,255,255,0.10) inset,
+            0 -1px 0 rgba(0,0,0,0.2) inset;
+          transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         /* Monogram logo */
@@ -167,11 +171,13 @@ const Navigation = () => {
           border-right: 1px solid rgba(255, 255, 255, 0.07);
           margin-right: 6px;
           line-height: 1;
+          transition: border-color 0.3s ease;
         }
         .nav-logo:hover { color: var(--color-accent); opacity: 0.85; }
 
         .nav-logo-dot {
           color: rgba(255,255,255,0.35);
+          transition: color 0.3s ease;
         }
 
         /* Link list */
@@ -234,6 +240,37 @@ const Navigation = () => {
           border-color: rgba(255, 255, 255, 0.18);
         }
 
+        /* ── Light mode overrides ────────────────────────────────────────────── */
+        .theme-light .nav-pill {
+          background: rgba(255, 255, 255, 0.45);
+          backdrop-filter: blur(24px) saturate(180%);
+          -webkit-backdrop-filter: blur(24px) saturate(180%);
+          border-color: rgba(255,255,255,0.75);
+          box-shadow:
+            0 4px 24px rgba(0,0,0,0.08),
+            0 1px 0 rgba(255,255,255,0.95) inset,
+            0 -1px 0 rgba(0,0,0,0.04) inset;
+        }
+        .theme-light .nav-logo {
+          border-right-color: rgba(0,0,0,0.1);
+        }
+        .theme-light .nav-logo-dot {
+          color: rgba(0,0,0,0.32);
+        }
+        .theme-light .nav-link {
+          color: rgba(0,0,0,0.52);
+        }
+        .theme-light .nav-link:hover  { color: rgba(0,0,0,0.88); }
+        .theme-light .nav-link.active { color: rgba(0,0,0,0.92); }
+        .theme-light .nav-theme {
+          color: rgba(0,0,0,0.52);
+          border-color: rgba(0,0,0,0.1);
+        }
+        .theme-light .nav-theme:hover {
+          color: rgba(0,0,0,0.88);
+          border-color: rgba(0,0,0,0.22);
+        }
+
         /* ── Mobile bottom bar ──────────────────────────────────────────────── */
         .nav-mobile { display: none; }
 
@@ -247,14 +284,15 @@ const Navigation = () => {
             left: 0;
             right: 0;
             z-index: var(--z-navigation);
-            background: rgba(10, 10, 16, 0.94);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            background: rgba(10, 10, 16, 0.55);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding: 10px 4px;
             padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
             justify-content: space-around;
             align-items: center;
+            transition: background 0.3s ease, border-color 0.3s ease;
           }
 
           .nav-mobile-link {
@@ -276,6 +314,17 @@ const Navigation = () => {
             margin-left: 0;
             border: 1px solid rgba(255,255,255,0.07);
           }
+
+          .theme-light .nav-mobile {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-top-color: rgba(255,255,255,0.7);
+          }
+          .theme-light .nav-mobile-link       { color: rgba(0,0,0,0.48); }
+          .theme-light .nav-mobile-link.active { color: rgba(0,0,0,0.9); }
+          .theme-light .nav-mobile-link:hover  { color: rgba(0,0,0,0.82); }
+          .theme-light .nav-mobile-theme { border-color: rgba(0,0,0,0.1); color: rgba(0,0,0,0.52); }
         }
       `}</style>
     </>

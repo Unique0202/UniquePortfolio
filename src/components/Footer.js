@@ -65,7 +65,7 @@ const Footer = () => (
 
     <style jsx>{`
       .site-footer {
-        border-top: 1px solid rgba(255,255,255,0.06);
+        border-top: 1px solid var(--glass-border);
         position: relative;
       }
 
@@ -103,14 +103,14 @@ const Footer = () => (
       .footer-logo:hover { opacity: 0.75; }
 
       .fl-u   { color: var(--color-accent); }
-      .fl-dot { color: rgba(255,255,255,0.22); }
+      .fl-dot { color: var(--glass-text-faint); }
 
       .footer-tagline {
         font-family: var(--font-mono);
         font-size: 0.6rem;
         letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: rgba(255,255,255,0.22);
+        color: var(--glass-text-faint);
         margin: 0;
       }
 
@@ -119,12 +119,12 @@ const Footer = () => (
 
       .footer-link {
         font-size: 0.82rem;
-        color: rgba(255,255,255,0.38);
+        color: var(--glass-text-lo);
         text-decoration: none;
         transition: color 0.2s ease;
         letter-spacing: 0.01em;
       }
-      .footer-link:hover { color: rgba(255,255,255,0.85); }
+      .footer-link:hover { color: var(--text); }
 
       /* Socials */
       .footer-socials { display: flex; gap: 10px; }
@@ -134,9 +134,9 @@ const Footer = () => (
         align-items: center;
         justify-content: center;
         width: 32px; height: 32px;
-        border: 1px solid rgba(255,255,255,0.08);
+        border: 1px solid var(--glass-border);
         border-radius: 50%;
-        color: rgba(255,255,255,0.38);
+        color: var(--glass-text-lo);
         text-decoration: none;
         transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
       }
@@ -147,7 +147,7 @@ const Footer = () => (
       }
 
       /* ── Bottom strip ──────────────────────────────────────────────────── */
-      .footer-bottom { border-top: 1px solid rgba(255,255,255,0.04); }
+      .footer-bottom { border-top: 1px solid var(--glass-border); }
 
       .footer-bottom-inner {
         display: flex;
@@ -163,7 +163,7 @@ const Footer = () => (
         font-family: var(--font-mono);
         font-size: 0.6rem;
         letter-spacing: 0.1em;
-        color: rgba(255,255,255,0.18);
+        color: var(--glass-text-faint);
         margin: 0;
       }
 

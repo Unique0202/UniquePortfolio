@@ -17,11 +17,23 @@
   --glow-accent:     rgba(233, 69, 96, 0.15);
   --glow-accent-md:  rgba(233, 69, 96, 0.25);
   --grid-line:       rgba(255, 255, 255, 0.035);
+  --glass-bg:          rgba(255,255,255,0.025);
+  --glass-bg-2:        rgba(255,255,255,0.03);
+  --glass-bg-hover:    rgba(255,255,255,0.04);
+  --glass-border:      rgba(255,255,255,0.07);
+  --glass-border-mid:  rgba(255,255,255,0.12);
+  --glass-border-hi:   rgba(255,255,255,0.25);
+  --glass-text-hi:     rgba(255,255,255,0.75);
+  --glass-text:        rgba(255,255,255,0.55);
+  --glass-text-mid:    rgba(255,255,255,0.45);
+  --glass-text-lo:     rgba(255,255,255,0.35);
+  --glass-text-faint:  rgba(255,255,255,0.22);
+  --dot-color-rgb:     255, 255, 255;
 
   /* ── Light theme values ── */
-  --bg-light:     #f4f4f6;
-  --text-light:   #0f0f14;
-  --card-light:   #ffffff;
+  --bg-light:     #f2ece0;
+  --text-light:   #1a1410;
+  --card-light:   #faf6ee;
   --border-light: rgba(0, 0, 0, 0.08);
   --muted-light:  #6b7280;
 
@@ -82,6 +94,7 @@
     --card: var(--card-dark);
     --border: var(--border-dark);
     --color-muted: var(--muted-dark);
+    --dot-color-rgb:     255, 255, 255;
   }
 }
 
@@ -92,6 +105,19 @@
     --card: var(--card-light);
     --border: var(--border-light);
     --color-muted: var(--muted-light);
+    --glass-bg:          rgba(0,0,0,0.05);
+    --glass-bg-2:        rgba(0,0,0,0.04);
+    --glass-bg-hover:    rgba(0,0,0,0.08);
+    --glass-border:      rgba(0,0,0,0.11);
+    --glass-border-mid:  rgba(0,0,0,0.18);
+    --glass-border-hi:   rgba(0,0,0,0.28);
+    --glass-text-hi:     rgba(0,0,0,0.88);
+    --glass-text:        rgba(0,0,0,0.70);
+    --glass-text-mid:    rgba(0,0,0,0.58);
+    --glass-text-lo:     rgba(0,0,0,0.48);
+    --glass-text-faint:  rgba(0,0,0,0.38);
+    --dot-color-rgb:     0, 0, 0;
+    --grid-line:         rgba(0, 0, 0, 0.06);
   }
 }
 
@@ -101,6 +127,19 @@
   --card: var(--card-dark);
   --border: var(--border-dark);
   --color-muted: var(--muted-dark);
+  --glass-bg:          rgba(255,255,255,0.025);
+  --glass-bg-2:        rgba(255,255,255,0.03);
+  --glass-bg-hover:    rgba(255,255,255,0.04);
+  --glass-border:      rgba(255,255,255,0.07);
+  --glass-border-mid:  rgba(255,255,255,0.12);
+  --glass-border-hi:   rgba(255,255,255,0.25);
+  --glass-text-hi:     rgba(255,255,255,0.75);
+  --glass-text:        rgba(255,255,255,0.55);
+  --glass-text-mid:    rgba(255,255,255,0.45);
+  --glass-text-lo:     rgba(255,255,255,0.35);
+  --glass-text-faint:  rgba(255,255,255,0.22);
+  --dot-color-rgb:     255, 255, 255;
+  --grid-line:         rgba(255, 255, 255, 0.035);
 }
 
 .theme-light {
@@ -109,6 +148,19 @@
   --card: var(--card-light);
   --border: var(--border-light);
   --color-muted: var(--muted-light);
+  --glass-bg:          rgba(0,0,0,0.05);
+  --glass-bg-2:        rgba(0,0,0,0.04);
+  --glass-bg-hover:    rgba(0,0,0,0.08);
+  --glass-border:      rgba(0,0,0,0.11);
+  --glass-border-mid:  rgba(0,0,0,0.18);
+  --glass-border-hi:   rgba(0,0,0,0.28);
+  --glass-text-hi:     rgba(0,0,0,0.88);
+  --glass-text:        rgba(0,0,0,0.70);
+  --glass-text-mid:    rgba(0,0,0,0.58);
+  --glass-text-lo:     rgba(0,0,0,0.48);
+  --glass-text-faint:  rgba(0,0,0,0.38);
+  --dot-color-rgb:     0, 0, 0;
+  --grid-line:         rgba(0, 0, 0, 0.06);
 }
 
 /* ============================================================

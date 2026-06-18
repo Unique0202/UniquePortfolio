@@ -41,7 +41,7 @@ const FloatingField = ({
         animate={
           active
             ? { y: -8, scale: 0.78, color: 'var(--color-accent)' }
-            : { y: 0,  scale: 1,    color: 'rgba(255,255,255,0.35)' }
+            : { y: 0,  scale: 1,    color: 'var(--glass-text-lo)' }
         }
         transition={{ duration: 0.22, ease: EASE }}
         style={{ originX: 0, originY: 0.5 }}
@@ -288,8 +288,8 @@ const Contact = () => {
 
         /* ── Panels ─────────────────────────────────────────────────────── */
         .contact-panel {
-          background: rgba(255,255,255,0.025);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-lg);
           padding: var(--space-4);
         }
@@ -328,9 +328,9 @@ const Contact = () => {
         .ff-input {
           padding: 22px 14px 6px;
           width: 100%;
-          border: 1px solid rgba(255,255,255,0.09);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-md);
-          background: rgba(255,255,255,0.04);
+          background: var(--glass-bg-hover);
           color: var(--text);
           font-family: inherit;
           font-size: 0.95rem;
@@ -366,15 +366,15 @@ const Contact = () => {
 
         .dismiss-btn {
           padding: 7px 16px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.12);
+          background: var(--glass-bg-hover);
+          border: 1px solid var(--glass-border-mid);
           border-radius: var(--radius-full);
           color: var(--text);
           font-size: 0.82rem;
           cursor: pointer;
           transition: background 0.2s ease;
         }
-        .dismiss-btn:hover { background: rgba(255,255,255,0.1); }
+        .dismiss-btn:hover { background: var(--glass-bg-hover); }
 
         .contact-form { display: flex; flex-direction: column; }
 
@@ -453,7 +453,7 @@ const Contact = () => {
 
         .info-value {
           font-size: 0.9rem;
-          color: rgba(255,255,255,0.7);
+          color: var(--glass-text);
           margin: 0;
         }
 
@@ -469,12 +469,12 @@ const Contact = () => {
           align-items: center;
           gap: 10px;
           padding: 9px 16px;
-          border: 1px solid rgba(255,255,255,0.09);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-full);
-          background: rgba(255,255,255,0.03);
+          background: var(--glass-bg-2);
           font-size: 0.82rem;
           font-weight: 500;
-          color: rgba(255,255,255,0.55);
+          color: var(--glass-text);
           text-decoration: none;
           transition: color 0.2s ease, border-color 0.2s ease,
                       background 0.2s ease, transform 0.25s var(--ease-out-expo);
@@ -495,9 +495,9 @@ const Contact = () => {
           font-family: var(--font-mono);
           font-size: 0.65rem;
           letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.4);
+          color: var(--glass-text-lo);
           padding: 10px 14px;
-          border: 1px solid rgba(255,255,255,0.06);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-full);
         }
 

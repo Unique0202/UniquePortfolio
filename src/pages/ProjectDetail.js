@@ -340,10 +340,10 @@ const ProjectDetail = () => {
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.4);
+          color: var(--glass-text-lo);
           transition: color 0.2s ease, gap 0.2s ease;
         }
-        .back-link:hover { color: rgba(255,255,255,0.85); gap: 12px; text-decoration: none; }
+        .back-link:hover { color: var(--text); gap: 12px; text-decoration: none; }
 
         .project-header { margin-bottom: var(--space-4); }
 
@@ -370,8 +370,8 @@ const ProjectDetail = () => {
           font-family: var(--font-mono);
           font-size: 0.62rem;
           letter-spacing: 0.1em;
-          color: rgba(255,255,255,0.3);
-          border: 1px solid rgba(255,255,255,0.08);
+          color: var(--glass-text-lo);
+          border: 1px solid var(--glass-border);
           padding: 4px 12px;
           border-radius: var(--radius-full);
         }
@@ -414,7 +414,7 @@ const ProjectDetail = () => {
 
         .project-section p {
           font-size: 0.95rem;
-          color: rgba(255,255,255,0.6);
+          color: var(--glass-text);
           line-height: 1.75;
         }
 
@@ -425,8 +425,8 @@ const ProjectDetail = () => {
           margin-top: var(--space-3);
           border-radius: var(--radius-lg);
           overflow: hidden;
-          background: rgba(255,255,255,0.025);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
         }
 
         .gallery-view {
@@ -515,13 +515,13 @@ const ProjectDetail = () => {
         }
 
         .sidebar-section {
-          background: rgba(255,255,255,0.025);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
           border-radius: var(--radius-lg);
           padding: var(--space-3);
           transition: border-color 0.25s ease;
         }
-        .sidebar-section:hover { border-color: rgba(255,255,255,0.12); }
+        .sidebar-section:hover { border-color: var(--glass-border-mid); }
 
         .sidebar-eyebrow {
           font-family: var(--font-mono);
@@ -536,7 +536,7 @@ const ProjectDetail = () => {
         .sidebar-value {
           font-family: var(--font-mono);
           font-size: 0.9rem;
-          color: rgba(255,255,255,0.6);
+          color: var(--glass-text);
           margin: 0;
         }
 
@@ -550,8 +550,8 @@ const ProjectDetail = () => {
           font-family: var(--font-mono);
           font-size: 0.62rem;
           letter-spacing: 0.05em;
-          color: rgba(255,255,255,0.5);
-          border: 1px solid rgba(255,255,255,0.1);
+          color: var(--glass-text-mid);
+          border: 1px solid var(--glass-border);
           padding: 3px 10px;
           border-radius: var(--radius-full);
           transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
