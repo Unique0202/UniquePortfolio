@@ -1,190 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Volume2, VolumeX, Waves } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAudio } from '../context/AudioContext';
+
+const BAR_DELAYS = [0, 0.18, 0.06, 0.24, 0.12];
 
 const AudioController = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { isMuted, toggleMute, volume, setVolume } = useAudio();
+  const timerRef                   = useRef(null);
+  const { isMuted, toggleMute, isAmbient, toggleAmbient } = useAudio();
 
   useEffect(() => {
-    // Show the controller briefly when the page loads
     setIsVisible(true);
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 5000);
-
-    return () => clearTimeout(timer);
+    timerRef.current = setTimeout(() => setIsVisible(false), 4500);
+    return () => clearTimeout(timerRef.current);
   }, []);
 
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-  };
-
-  const handleMouseEnter = () => {
-    setIsVisible(true);
-  };
-
-  const handleMouseLeave = () => {
-    // Hide after a short delay to allow interaction
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+  const show = () => { clearTimeout(timerRef.current); setIsVisible(true); };
+  const hide = () => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setIsVisible(false), 2000);
   };
 
   return (
-    <div 
-      className={`audio-controller ${isVisible ? 'visible' : ''}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+    <div
+      className={`audio-ctrl ${isVisible ? 'visible' : ''}`}
+      onMouseEnter={show}
+      onMouseLeave={hide}
     >
-      <button 
-        className="audio-toggle" 
-        onClick={toggleMute}
-        aria-label={isMuted ? "Unmute audio" : "Mute audio"}
+      {/* Ambient toggle */}
+      <button
+        className={`audio-btn ambient-btn ${isAmbient ? 'active' : ''}`}
+        onClick={toggleAmbient}
+        aria-label={isAmbient ? 'Stop ambient sound' : 'Play ambient sound'}
+        title={isAmbient ? 'Ambient on' : 'Ambient off'}
       >
-        {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+        <Waves size={14} />
       </button>
-      
-      <div className="volume-control">
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="volume-slider"
-          aria-label="Volume control"
-        />
-        <div className="audio-visualizer">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <span 
-              key={index} 
-              className={`audio-bar ${!isMuted ? 'active' : ''}`}
-              style={{ 
-                animationPlayState: !isMuted ? 'running' : 'paused',
-                height: `${Math.random() * 10 + 3}px`,  // Random heights
-                animationDuration: `${0.5 + Math.random() * 1}s`  // Random durations
-              }}
-            ></span>
-          ))}
-        </div>
+
+      {/* Divider */}
+      <span className="audio-divider" aria-hidden="true" />
+
+      {/* Mute toggle */}
+      <button
+        className="audio-btn"
+        onClick={toggleMute}
+        aria-label={isMuted ? 'Unmute sounds' : 'Mute sounds'}
+      >
+        {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+      </button>
+
+      {/* Wave bars — animate when unmuted, flat when muted */}
+      <div className="wave-bars" aria-hidden="true">
+        {BAR_DELAYS.map((delay, i) => (
+          <motion.span
+            key={i}
+            className="wave-bar"
+            animate={
+              isMuted
+                ? { scaleY: 0.15 }
+                : { scaleY: [0.2, 1, 0.35, 0.85, 0.2] }
+            }
+            transition={{ duration: 0.85, repeat: Infinity, delay, ease: 'easeInOut' }}
+          />
+        ))}
       </div>
-      
+
       <style jsx>{`
-        .audio-controller {
+        .audio-ctrl {
           position: fixed;
           bottom: 20px;
           right: 20px;
           display: flex;
           align-items: center;
-          background-color: var(--card);
+          gap: 6px;
+          background: rgba(10,10,16,0.88);
+          border: 1px solid rgba(255,255,255,0.1);
           border-radius: var(--radius-full);
           padding: 6px 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
           z-index: 1000;
           opacity: 0;
-          transform: translateY(10px);
+          transform: translateY(8px);
           transition: opacity 0.3s ease, transform 0.3s ease;
           pointer-events: none;
         }
-        
-        .audio-controller.visible {
+        .audio-ctrl.visible {
           opacity: 1;
           transform: translateY(0);
           pointer-events: all;
         }
-        
-        .audio-toggle {
+
+        .audio-btn {
           background: transparent;
           border: none;
-          color: var(--text);
+          color: rgba(255,255,255,0.38);
           cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 30px;
-          height: 30px;
+          display: flex; align-items: center; justify-content: center;
+          width: 26px; height: 26px;
           border-radius: 50%;
-          transition: background-color 0.2s ease;
+          transition: color 0.2s ease, background 0.2s ease;
+          flex-shrink: 0;
         }
-        
-        .audio-toggle:hover {
-          background-color: rgba(0, 0, 0, 0.05);
+        .audio-btn:hover {
+          color: rgba(255,255,255,0.85);
+          background: rgba(255,255,255,0.07);
         }
-        
-        .volume-control {
-          display: flex;
-          align-items: center;
-          margin-left: 10px;
-          width: 100px;
-          overflow: hidden;
-          transition: width 0.3s ease;
+
+        .ambient-btn.active {
+          color: var(--color-accent);
         }
-        
-        .volume-slider {
-          width: 70px;
-          -webkit-appearance: none;
-          appearance: none;
-          height: 4px;
-          background: var(--color-muted);
-          outline: none;
+        .ambient-btn.active:hover {
+          color: var(--color-accent);
+          background: rgba(233,69,96,0.1);
+        }
+
+        .audio-divider {
+          width: 1px;
+          height: 14px;
+          background: rgba(255,255,255,0.1);
+          flex-shrink: 0;
+        }
+
+        .wave-bars {
+          display: flex; align-items: center;
+          gap: 2px; height: 18px;
+        }
+        .wave-bar {
+          display: block;
+          width: 3px; height: 13px;
+          background: var(--color-accent);
           border-radius: 2px;
+          transform-origin: bottom;
         }
-        
-        .volume-slider::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 12px;
-          height: 12px;
-          background: var(--color-accent);
-          border-radius: 50%;
-          cursor: pointer;
-        }
-        
-        .volume-slider::-moz-range-thumb {
-          width: 12px;
-          height: 12px;
-          background: var(--color-accent);
-          border-radius: 50%;
-          cursor: pointer;
-          border: none;
-        }
-        
-        .audio-visualizer {
-          display: flex;
-          align-items: center;
-          gap: 2px;
-          margin-left: 10px;
-          height: 20px;
-        }
-        
-        .audio-bar {
-          width: 3px;
-          background-color: var(--color-accent);
-          border-radius: 1px;
-          animation: audioWave 0.8s infinite alternate;
-        }
-        
-        .audio-bar.active {
-          opacity: 0.8;
-        }
-        
+
         @media (max-width: 768px) {
-          .audio-controller {
-            bottom: 10px;
-            right: 10px;
-          }
-          
-          .volume-control {
-            width: 50px;
-          }
-          
-          .volume-slider {
-            width: 30px;
-          }
+          .audio-ctrl { bottom: 10px; right: 10px; }
         }
       `}</style>
     </div>

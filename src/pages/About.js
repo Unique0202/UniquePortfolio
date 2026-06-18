@@ -1,565 +1,583 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Award, BookOpen, Code, Cpu, Star, Zap } from 'lucide-react';
+import React, { useRef } from 'react';
+import { BookOpen, Cpu, Star, Zap, Award, Download, Trophy } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
 import { useAudio } from '../context/AudioContext';
 import UniquePic from '../assets/UniquePicedit.jpg';
 
+const EASE = [0.22, 1, 0.36, 1];
+
+const fadeUp = (delay = 0) => ({
+  initial:    { opacity: 0, y: 24 },
+  whileInView:{ opacity: 1, y: 0  },
+  viewport:   { once: true, amount: 0.15 },
+  transition: { duration: 0.55, ease: EASE, delay },
+});
+
+const PHILOSOPHY = [
+  {
+    icon: <BookOpen size={20} />,
+    title: 'Human-Centered',
+    body: 'Design for people first — empathy and research over assumption.',
+  },
+  {
+    icon: <Zap size={20} />,
+    title: 'Multimodal Interaction',
+    body: 'Visual, auditory, and tactile cues together create richer experiences.',
+  },
+  {
+    icon: <Cpu size={20} />,
+    title: 'Context Awareness',
+    body: "Interfaces that adapt to users' environment and situation feel natural.",
+  },
+  {
+    icon: <Star size={20} />,
+    title: 'Mindful Innovation',
+    body: 'Technology should enhance human experiences, not distract from them.',
+  },
+];
+
+const SKILLS = [
+  { name: 'React / JavaScript',  level: 80 },
+  { name: 'Python / Flask',      level: 72 },
+  { name: 'UI/UX Design',        level: 75 },
+  { name: 'Java / C++',          level: 68 },
+  { name: 'PostgreSQL / SQL',    level: 70 },
+  { name: 'Figma / Adobe Suite', level: 73 },
+];
+
+const TIMELINE = [
+  {
+    date: '2023 – Present',
+    title: 'B.Tech CS & Design — IIIT-Delhi',
+    body: 'Building full-stack systems, exploring UI/UX design, and diving into ML/AI in my 4th year.',
+  },
+  {
+    date: '2022 – 2023',
+    title: 'JEE Preparation Phase',
+    body: 'Dedicated year mastering Physics, Chemistry, and Mathematics for engineering entrance examinations.',
+  },
+  {
+    date: '2020 – 2022',
+    title: 'Higher Secondary Education',
+    body: 'Completed 12th in Science with Computer Science, laying the foundation for a technical career.',
+  },
+  {
+    date: 'Next →',
+    title: 'ML/AI Research & Advanced Systems',
+    body: 'Deep-diving into machine learning, distributed systems, and accessible technology.',
+  },
+];
+
+const AWARDS = [
+  {
+    icon: <Trophy size={18} />,
+    title: '4th · 54th Youth Parliament',
+    body: 'National-level public speaking and policy debate — competed among participants from across India.',
+  },
+  {
+    icon: <Award size={18} />,
+    title: '20+ School Merit Certificates',
+    body: 'Awarded across co-curricular activities for consistent academic and creative excellence.',
+  },
+];
+
 const About = () => {
-  const sectionsRef = useRef([]);
-  const [activeSection, setActiveSection] = useState(0);
+  const skillsRef    = useRef(null);
+  const skillsInView = useInView(skillsRef, { once: true, amount: 0.3 });
   const { playSound } = useAudio();
-  
-  // Skills data
-  const skills = [
-    { name: 'UX Design', level: 50 },
-    { name: 'Interaction Design', level: 50 },
-    { name: 'Front-end Development', level: 60 },
-    { name: 'Prototyping', level: 70 },
-    { name: 'Back-end Development', level: 65 },
-    { name: 'Design Systems', level: 60 }
-  ];
-  
-  // Array of refs for each section
-  useEffect(() => {
-    sectionsRef.current = sectionsRef.current.slice(0, 4);
-  }, []);
-  
-  // Track scroll position to highlight current section
-  useEffect(() => {
-    const handleScroll = () => {
-      const pageTop = window.scrollY;
-      const pageBottom = pageTop + window.innerHeight;
-      let newActiveSection = activeSection;
-      
-      sectionsRef.current.forEach((section, index) => {
-        if (!section) return;
-        
-        const sectionTop = section.offsetTop;
-        const sectionBottom = sectionTop + section.offsetHeight;
-        
-        if (sectionTop < pageBottom - 200 && sectionBottom > pageTop + 200) {
-          newActiveSection = index;
-        }
-      });
-      
-      if (newActiveSection !== activeSection) {
-        setActiveSection(newActiveSection);
-        playSound('swoosh');
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeSection, playSound]);
-  
-  // Animate skill bars when in view
-  const skillsRef = useRef(null);
-  const [skillsVisible, setSkillsVisible] = useState(false);
-  
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setSkillsVisible(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    
-    if (skillsRef.current) {
-      observer.observe(skillsRef.current);
-    }
-    
-    return () => {
-      if (skillsRef.current) {
-        observer.unobserve(skillsRef.current);
-      }
-    };
-  }, []);
-  
-  // Handle touch gestures
-  const handleTouchStart = (index) => {
-    playSound('click');
-    // Haptic feedback
-    if (navigator.vibrate) {
-      navigator.vibrate(15);
-    }
-  };
 
   return (
     <div className="about-page">
       <div className="container">
-        {/* Hero Section */}
-        <section 
-          ref={el => sectionsRef.current[0] = el}
-          className={`about-hero ${activeSection === 0 ? 'active' : ''}`}
-        >
-          <div className="about-header">
-            <h1>About Me</h1>
-            <p className="lead">
-            Hey there! I'm Unique, currently pursuing my B.Tech in Computer Science and Design from IIIT-D. With a passion for both programming and design, I strive to create innovative solutions.
-            I'm always eager to connect with fellow enthusiasts, professionals, and anyone passionate about technology and design. Feel free to reach out.
+
+        {/* ── Hero ─────────────────────────────────────────────────────────── */}
+        <section className="about-hero">
+          <motion.div
+            className="about-header"
+            initial={{ opacity: 0, x: -36 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: EASE }}
+          >
+            <p className="about-eyebrow">// 00 ABOUT</p>
+            <h1 className="about-title">About Me</h1>
+            <p className="about-lead">
+              Hey! I'm Unique — a B.Tech CS&amp;Design student at IIIT-Delhi
+              building products at the intersection of beautiful design and
+              solid engineering.
             </p>
-          </div>
-          
-          <div className="about-image">
-            <img 
-              src={UniquePic}
-              alt="Working on design projects" 
-              className="rounded-image"
-            />
-          </div>
+            <a
+              href="/Unique_wg_Resume.pdf"
+              download="Unique_Resume.pdf"
+              className="resume-btn"
+              onClick={() => playSound('click')}
+            >
+              <Download size={15} />
+              Download Resume
+            </a>
+          </motion.div>
+
+          <motion.div
+            className="about-image-wrap"
+            initial={{ opacity: 0, x: 36 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
+          >
+            <motion.div
+              className="about-image"
+              whileHover={{ y: -8, transition: { duration: 0.35, ease: EASE } }}
+            >
+              <img src={UniquePic} alt="Unique" />
+            </motion.div>
+          </motion.div>
         </section>
-        
-        {/* Philosophy Section */}
-        <section 
-          ref={el => sectionsRef.current[1] = el}
-          className={`about-philosophy ${activeSection === 1 ? 'active' : ''}`}
-        >
-          <h2>Design Philosophy</h2>
-          
+
+        {/* ── Philosophy ───────────────────────────────────────────────────── */}
+        <section className="about-section">
+          <div className="section-head">
+            <motion.p className="eyebrow" {...fadeUp(0)}>// 01 PHILOSOPHY</motion.p>
+            <motion.h2 {...fadeUp(0.05)}>How I Think</motion.h2>
+          </div>
+
           <div className="philosophy-grid">
-            <div 
-              className="philosophy-card"
-              onTouchStart={() => handleTouchStart(0)}
-            >
-              <div className="icon-wrapper">
-                <BookOpen size={24} />
-              </div>
-              <h3>Human-Centered</h3>
-              <p>
-                I believe in designing for people first, using empathy and research to create experiences that truly resonate.
-              </p>
-            </div>
-            
-            <div 
-              className="philosophy-card"
-              onTouchStart={() => handleTouchStart(1)}
-            >
-              <div className="icon-wrapper">
-                <Zap size={24} />
-              </div>
-              <h3>Multimodal Interaction</h3>
-              <p>
-                Combining visual, auditory, and tactile interactions creates richer, more accessible experiences.
-              </p>
-            </div>
-            
-            <div 
-              className="philosophy-card"
-              onTouchStart={() => handleTouchStart(2)}
-            >
-              <div className="icon-wrapper">
-                <Cpu size={24} />
-              </div>
-              <h3>Context Awareness</h3>
-              <p>
-                Thoughtful interfaces should adapt to users' needs, environment, and situation.
-              </p>
-            </div>
-            
-            <div 
-              className="philosophy-card"
-              onTouchStart={() => handleTouchStart(3)}
-            >
-              <div className="icon-wrapper">
-                <Star size={24} />
-              </div>
-              <h3>Mindful Innovation</h3>
-              <p>
-                Technology should enhance human experiences, not distract from them.
-              </p>
-            </div>
+            {PHILOSOPHY.map((p, i) => (
+              <motion.div
+                key={p.title}
+                className="philo-card"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.5, ease: EASE, delay: i * 0.09 }}
+                onHoverStart={() => playSound('hover')}
+              >
+                <div className="philo-icon">{p.icon}</div>
+                <h3 className="philo-title">{p.title}</h3>
+                <p className="philo-body">{p.body}</p>
+              </motion.div>
+            ))}
           </div>
         </section>
-        
-        {/* Skills Section */}
-        <section 
-          ref={el => {
-            sectionsRef.current[2] = el;
-            skillsRef.current = el;
-          }}
-          className={`about-skills ${activeSection === 2 ? 'active' : ''}`}
-        >
-          <h2>Skills & Expertise</h2>
-          
+
+        {/* ── Skills ───────────────────────────────────────────────────────── */}
+        <section className="about-section" ref={skillsRef}>
+          <div className="section-head">
+            <motion.p className="eyebrow" {...fadeUp(0)}>// 02 EXPERTISE</motion.p>
+            <motion.h2 {...fadeUp(0.05)}>Skills</motion.h2>
+          </div>
+
           <div className="skills-grid">
-            {skills.map((skill, index) => (
-              <div className="skill-item" key={index}>
+            {SKILLS.map((skill, i) => (
+              <div className="skill-item" key={skill.name}>
                 <div className="skill-header">
-                  <h3>{skill.name}</h3>
-                  <span className="skill-percentage">{skill.level}%</span>
+                  <span className="skill-name">{skill.name}</span>
+                  <span className="skill-pct">{skill.level}%</span>
                 </div>
-                <div className="skill-bar">
-                  <div 
-                    className="skill-progress"
-                    style={{ 
-                      width: skillsVisible ? `${skill.level}%` : '0%',
-                      transitionDelay: `${index * 0.1}s`
-                    }}
-                  ></div>
+                <div className="skill-track">
+                  <motion.div
+                    className="skill-fill"
+                    initial={{ width: '0%' }}
+                    animate={skillsInView ? { width: `${skill.level}%` } : { width: '0%' }}
+                    transition={{ duration: 1.0, ease: EASE, delay: i * 0.09 }}
+                  />
                 </div>
               </div>
             ))}
           </div>
-          
-          <div className="expertise-areas">
-            <h3>Areas of Expertise</h3>
-            
-            <div className="expertise-tags">
-              <span className="expertise-tag">UX/UI Design</span>
-              <span className="expertise-tag">Interaction Design</span>
-              <span className="expertise-tag">Back-end Development</span>
-              {/* <span className="expertise-tag">Gesture Controls</span>
-              <span className="expertise-tag">Voice Interfaces</span>
-              <span className="expertise-tag">Haptic Feedback</span> */}
-              <span className="expertise-tag">Design Systems</span>
-              <span className="expertise-tag">Front-end Development</span>
-              <span className="expertise-tag">User Testing</span>
-              <span className="expertise-tag">Prototyping</span>
-            </div>
+        </section>
+
+        {/* ── Awards ───────────────────────────────────────────────────────── */}
+        <section className="about-section">
+          <div className="section-head">
+            <motion.p className="eyebrow" {...fadeUp(0)}>// 03 RECOGNITION</motion.p>
+            <motion.h2 {...fadeUp(0.05)}>Awards</motion.h2>
+          </div>
+
+          <div className="awards-grid">
+            {AWARDS.map((award, i) => (
+              <motion.div
+                key={award.title}
+                className="award-card"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.5, ease: EASE, delay: i * 0.1 }}
+              >
+                <div className="award-icon">{award.icon}</div>
+                <div>
+                  <h3 className="award-title">{award.title}</h3>
+                  <p className="award-body">{award.body}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </section>
-        
-{/* Journey Section */}
-<section 
-  ref={el => sectionsRef.current[3] = el}
-  className={`about-journey ${activeSection === 3 ? 'active' : ''}`}
->
-  <h2>My Journey</h2>
-  
-  <div className="timeline">
-    <div className="timeline-item">
-      <div className="timeline-marker"></div>
-      <div className="timeline-content">
-        <div className="timeline-date">2023 - Present</div>
-        <h3>BTech in Computer Science & Design</h3>
-        <p>Currently in my 2nd year at IIIT-Delhi, exploring full-stack development, UI/UX design, and software engineering fundamentals.</p>
+
+        {/* ── Journey ──────────────────────────────────────────────────────── */}
+        <section className="about-section">
+          <div className="section-head">
+            <motion.p className="eyebrow" {...fadeUp(0)}>// 04 JOURNEY</motion.p>
+            <motion.h2 {...fadeUp(0.05)}>My Journey</motion.h2>
+          </div>
+
+          <div className="timeline">
+            {TIMELINE.map((item, i) => (
+              <motion.div
+                key={item.title}
+                className="tl-item"
+                initial={{ opacity: 0, x: i % 2 === 0 ? -24 : 24 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.55, ease: EASE, delay: i * 0.1 }}
+              >
+                <div className="tl-marker" />
+                <div className="tl-card">
+                  <span className="tl-date">{item.date}</span>
+                  <h3 className="tl-title">{item.title}</h3>
+                  <p className="tl-body">{item.body}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
       </div>
-    </div>
-    
-    <div className="timeline-item">
-      <div className="timeline-marker"></div>
-      <div className="timeline-content">
-        <div className="timeline-date">2022 - 2023</div>
-        <h3>JEE Preparation Phase</h3>
-        <p>Dedicated year to mastering Physics, Chemistry, and Mathematics for engineering entrance examinations.</p>
-      </div>
-    </div>
-    
-    <div className="timeline-item">
-      <div className="timeline-marker"></div>
-      <div className="timeline-content">
-        <div className="timeline-date">2020 - 2022</div>
-        <h3>Higher Secondary Education</h3>
-        <p>Completed 12th grade in Science stream with Computer Science, laying foundation for technical career.</p>
-      </div>
-    </div>
-    
-    <div className="timeline-item">
-      <div className="timeline-marker"></div>
-      <div className="timeline-content">
-        <div className="timeline-date">Future Aspirations</div>
-        <h3>Full-Stack Developer</h3>
-        <p>Working towards mastering both frontend and backend technologies to build complete, scalable web applications.</p>
-      </div>
-    </div>
-  </div>
-</section>
-      </div>
-      
+
       <style jsx>{`
         .about-page {
-          padding-top: 60px;
-          padding-bottom: 60px;
+          padding: 60px 0 100px;
+          min-height: 100vh;
         }
-        
-        section {
-          padding: var(--space-5) 0;
-          opacity: 0.6;
-          transition: opacity 0.5s ease;
+
+        .about-section { padding: var(--space-6) 0 0; }
+
+        /* ── Section header pattern ─────────────────────────────────────── */
+        .section-head { margin-bottom: var(--space-4); }
+
+        .eyebrow {
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--color-accent);
+          margin-bottom: var(--space-2);
+          opacity: 0.85;
         }
-        
-        section.active {
-          opacity: 1;
+
+        .section-head h2 {
+          font-size: clamp(1.8rem, 4vw, 2.8rem);
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          margin: 0;
         }
-        
-        /* Hero Section */
+
+        /* ── Hero ───────────────────────────────────────────────────────── */
         .about-hero {
           display: flex;
           align-items: center;
-          gap: var(--space-5);
-          min-height: 60vh;
+          gap: var(--space-6);
+          padding: var(--space-4) 0 0;
         }
-        
-        .about-header {
-          flex: 1;
+
+        .about-header { flex: 1; }
+
+        .about-eyebrow {
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--color-accent);
+          margin-bottom: var(--space-2);
+          opacity: 0.85;
         }
-        
-        .about-header h1 {
+
+        .about-title {
+          font-size: clamp(2.8rem, 7vw, 5.5rem);
+          font-weight: 900;
+          letter-spacing: -0.04em;
+          line-height: 0.95;
           margin-bottom: var(--space-3);
-          position: relative;
         }
-        
-        .about-header h1::after {
-          content: '';
-          position: absolute;
-          bottom: -10px;
-          left: 0;
-          width: 60px;
-          height: 3px;
-          background-color: var(--color-accent);
-        }
-        
-        .about-image {
-          flex: 1;
-        }
-        
-        .rounded-image {
-          border-radius: var(--radius-lg);
-          width: 100%;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-          transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        
-        .about-image:hover .rounded-image {
-          transform: translateY(-10px) rotate(2deg);
-        }
-        
-        /* Philosophy Section */
-        .about-philosophy h2,
-        .about-skills h2,
-        .about-journey h2 {
-          text-align: center;
+
+        .about-lead {
+          font-size: 1rem;
+          color: var(--color-muted);
+          line-height: 1.75;
+          max-width: 44ch;
           margin-bottom: var(--space-4);
-          position: relative;
         }
-        
-        .about-philosophy h2::after,
-        .about-skills h2::after,
-        .about-journey h2::after {
+
+        .resume-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 22px;
+          background: var(--color-accent);
+          color: #fff;
+          border-radius: var(--radius-full);
+          font-size: 0.82rem;
+          font-weight: 600;
+          letter-spacing: 0.01em;
+          text-decoration: none;
+          transition: background 0.22s ease, transform 0.22s ease;
+        }
+        .resume-btn:hover {
+          background: #d13652;
+          transform: translateY(-2px);
+          color: #fff;
+          text-decoration: none;
+        }
+
+        .about-image-wrap {
+          flex: 0 0 auto;
+          width: 340px;
+        }
+
+        .about-image {
+          position: relative;
+          border-radius: var(--radius-lg);
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .about-image::before {
           content: '';
           position: absolute;
-          bottom: -10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 60px;
-          height: 3px;
-          background-color: var(--color-accent);
+          inset: -1px;
+          border-radius: var(--radius-lg);
+          border: 1.5px solid var(--color-accent);
+          opacity: 0.18;
+          pointer-events: none;
+          z-index: 1;
         }
-        
+
+        .about-image img {
+          width: 100%;
+          display: block;
+          border-radius: var(--radius-lg);
+        }
+
+        /* ── Philosophy cards ───────────────────────────────────────────── */
         .philosophy-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: var(--space-3);
-          margin-top: var(--space-4);
+          grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+          gap: 12px;
         }
-        
-        .philosophy-card {
-          background-color: var(--card);
+
+        .philo-card {
+          background: rgba(255,255,255,0.028);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: var(--radius-lg);
           padding: var(--space-3);
-          border-radius: var(--radius-md);
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-          transition: all 0.3s ease;
-          cursor: pointer;
+          cursor: default;
+          transition: border-color 0.25s ease, transform 0.3s var(--ease-out-expo),
+                      background 0.25s ease;
         }
-        
-        .philosophy-card:hover {
+        .philo-card:hover {
+          border-color: rgba(233,69,96,0.28);
+          background: rgba(233,69,96,0.04);
           transform: translateY(-5px);
-          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
-        
-        .icon-wrapper {
+
+        .philo-icon {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 50px;
-          height: 50px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          background-color: rgba(233, 69, 96, 0.1);
+          background: rgba(233,69,96,0.1);
           color: var(--color-accent);
-          margin-bottom: var(--space-2);
+          margin-bottom: 14px;
         }
-        
-        .philosophy-card h3 {
-          margin-bottom: var(--space-2);
+
+        .philo-title {
+          font-size: 0.95rem;
+          font-weight: 700;
+          margin-bottom: 8px;
+          letter-spacing: -0.01em;
         }
-        
-        /* Skills Section */
+
+        .philo-body {
+          font-size: 0.86rem;
+          color: rgba(255,255,255,0.45);
+          line-height: 1.65;
+          margin: 0;
+        }
+
+        /* ── Skills ─────────────────────────────────────────────────────── */
         .skills-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: var(--space-4);
-          margin-top: var(--space-4);
+          gap: 20px 40px;
         }
-        
-        .skill-item {
-          margin-bottom: var(--space-3);
-        }
-        
+
         .skill-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: var(--space-1);
+          margin-bottom: 8px;
         }
-        
-        .skill-header h3 {
-          font-size: 1rem;
-          margin: 0;
+
+        .skill-name {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: rgba(255,255,255,0.75);
         }
-        
-        .skill-percentage {
-          font-weight: 500;
+
+        .skill-pct {
+          font-family: var(--font-mono);
+          font-size: 0.68rem;
+          letter-spacing: 0.06em;
           color: var(--color-accent);
         }
-        
-        .skill-bar {
+
+        .skill-track {
           width: 100%;
-          height: 8px;
-          background-color: rgba(0, 0, 0, 0.05);
+          height: 4px;
+          background: rgba(255,255,255,0.07);
           border-radius: var(--radius-full);
           overflow: hidden;
         }
-        
-        .skill-progress {
+
+        .skill-fill {
           height: 100%;
-          background-color: var(--color-accent);
-          width: 0;
-          transition: width 1s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        
-        .expertise-areas {
-          margin-top: var(--space-5);
-        }
-        
-        .expertise-areas h3 {
-          text-align: center;
-          margin-bottom: var(--space-3);
-        }
-        
-        .expertise-tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          justify-content: center;
-        }
-        
-        .expertise-tag {
-          padding: 8px 16px;
-          background-color: rgba(0, 0, 0, 0.05);
+          background: var(--color-accent);
           border-radius: var(--radius-full);
-          font-size: 0.9rem;
-          transition: all 0.3s ease;
-          cursor: pointer;
         }
-        
-        .expertise-tag:hover {
-          background-color: var(--color-accent);
-          color: white;
-          transform: translateY(-3px);
+
+        /* ── Awards ─────────────────────────────────────────────────────── */
+        .awards-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 12px;
         }
-        
-        /* Journey Section */
+
+        .award-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 16px;
+          background: rgba(255,255,255,0.028);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: var(--radius-lg);
+          padding: var(--space-3);
+          transition: border-color 0.25s ease;
+        }
+        .award-card:hover { border-color: rgba(233,69,96,0.3); }
+
+        .award-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(233,69,96,0.1);
+          color: var(--color-accent);
+          flex-shrink: 0;
+        }
+
+        .award-title {
+          font-size: 0.95rem;
+          font-weight: 700;
+          margin-bottom: 6px;
+          letter-spacing: -0.01em;
+        }
+
+        .award-body {
+          margin: 0;
+          font-size: 0.86rem;
+          color: rgba(255,255,255,0.45);
+          line-height: 1.6;
+        }
+
+        /* ── Timeline ───────────────────────────────────────────────────── */
         .timeline {
           position: relative;
-          max-width: 800px;
-          margin: var(--space-4) auto 0;
-          padding-left: 40px;
+          max-width: 720px;
+          padding-left: 36px;
         }
-        
+
         .timeline::before {
           content: '';
           position: absolute;
-          top: 0;
+          top: 8px;
           bottom: 0;
           left: 0;
-          width: 2px;
-          background-color: rgba(0, 0, 0, 0.1);
+          width: 1px;
+          background: linear-gradient(to bottom, var(--color-accent), rgba(233,69,96,0.06));
         }
-        
-        .timeline-item {
+
+        .tl-item {
           position: relative;
           margin-bottom: var(--space-4);
         }
-        
-        .timeline-marker {
+        .tl-item:last-child { margin-bottom: 0; }
+
+        .tl-marker {
           position: absolute;
           left: -40px;
-          width: 16px;
-          height: 16px;
+          top: 16px;
+          width: 10px;
+          height: 10px;
           border-radius: 50%;
-          background-color: var(--color-accent);
-          border: 3px solid var(--bg);
-          box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.3);
+          background: var(--color-accent);
+          border: 2px solid var(--bg);
+          box-shadow: 0 0 0 3px rgba(233,69,96,0.2);
         }
-        
-        .timeline-content {
-          background-color: var(--card);
-          padding: var(--space-3);
-          border-radius: var(--radius-md);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-          transition: all 0.3s ease;
+
+        .tl-card {
+          background: rgba(255,255,255,0.028);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: var(--radius-lg);
+          padding: 20px var(--space-3);
+          transition: border-color 0.25s ease;
         }
-        
-        .timeline-content:hover {
-          transform: translateX(5px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .timeline-date {
-          font-size: 0.9rem;
+        .tl-card:hover { border-color: rgba(233,69,96,0.22); }
+
+        .tl-date {
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
           color: var(--color-accent);
-          font-weight: 500;
-          margin-bottom: var(--space-1);
+          opacity: 0.85;
+          display: block;
+          margin-bottom: 8px;
         }
-        
-        .timeline-content h3 {
-          margin-bottom: var(--space-1);
+
+        .tl-title {
+          font-size: 1rem;
+          font-weight: 700;
+          margin-bottom: 8px;
+          letter-spacing: -0.01em;
         }
-        
-        .timeline-content p {
-          margin-bottom: 0;
-          color: var(--color-muted);
+
+        .tl-body {
+          margin: 0;
+          font-size: 0.875rem;
+          color: rgba(255,255,255,0.45);
+          line-height: 1.65;
         }
-        
-        /* Responsive */
-        @media (max-width: 992px) {
+
+        /* ── Responsive ─────────────────────────────────────────────────── */
+        @media (max-width: 960px) {
           .about-hero {
             flex-direction: column;
             gap: var(--space-4);
-            text-align: center;
           }
-          
-          .about-header h1::after {
-            left: 50%;
-            transform: translateX(-50%);
-          }
-          
-          .about-image {
+          .about-image-wrap {
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 380px;
+            align-self: center;
           }
+          .about-lead { max-width: 100%; }
         }
-        
+
         @media (max-width: 768px) {
-          .philosophy-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .skills-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .timeline {
-            padding-left: 30px;
-          }
-          
-          .timeline-marker {
-            left: -30px;
-            width: 12px;
-            height: 12px;
-          }
+          .philosophy-grid { grid-template-columns: 1fr; }
+          .skills-grid     { grid-template-columns: 1fr; }
+          .awards-grid     { grid-template-columns: 1fr; }
+          .timeline        { padding-left: 26px; }
+          .tl-marker       { left: -30px; }
         }
       `}</style>
     </div>

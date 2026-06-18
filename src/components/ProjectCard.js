@@ -1,275 +1,277 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAudio } from '../context/AudioContext';
 
-const ProjectCard = ({ project, index }) => {
+const ProjectCard = ({ project, index = 0 }) => {
   const cardRef = useRef(null);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-  const [isInView, setIsInView] = useState(false);
+  const [rot, setRot] = useState({ x: 0, y: 0 });
   const { playSound } = useAudio();
-  
-  // 3D effect when mouse moves over the card
-  const handleMouseMove = (e) => {
+
+  const handleMouseMove = useCallback((e) => {
     if (!cardRef.current) return;
-    
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    const rotateY = ((x - centerX) / centerX) * 10; // Max 10 degrees
-    const rotateX = ((centerY - y) / centerY) * 10; // Max 10 degrees
-    
-    setRotation({ x: rotateX, y: rotateY });
-  };
-  
-  const resetRotation = () => {
-    setRotation({ x: 0, y: 0 });
-  };
-  
-  // Check if the card is in view
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { threshold: 0.2 }
-    );
-    
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-    
-    return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
-      }
-    };
+    const r = cardRef.current.getBoundingClientRect();
+    setRot({
+      x: ((r.height / 2 - (e.clientY - r.top))  / (r.height / 2)) * 6,
+      y: (((e.clientX - r.left) - r.width / 2)  / (r.width  / 2)) * 6,
+    });
   }, []);
-  
-  // Handle touch interactions for mobile
-  const handleTouchStart = () => {
-    playSound('pop');
-    setIsHovered(true);
-    
-    // Simulate haptic feedback
-    if (navigator.vibrate) {
-      navigator.vibrate(15);
-    }
-  };
-  
-  const handleTouchEnd = () => {
-    setIsHovered(false);
-  };
-  
+
+  const resetRot = useCallback(() => setRot({ x: 0, y: 0 }), []);
+
+  const num = String(index + 1).padStart(2, '0');
+
   return (
     <div
       ref={cardRef}
-      className={`project-card ${isInView ? 'in-view' : ''}`}
-      style={{
-        animationDelay: `${index * 0.1}s`,
-        transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.02 : 1})`,
-      }}
+      className="project-card"
+      style={{ transform: `perspective(900px) rotateX(${rot.x}deg) rotateY(${rot.y}deg)` }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => {
-        setIsHovered(true);
-        playSound('hover');
-      }}
-      onMouseLeave={() => {
-        resetRotation();
-        setIsHovered(false);
-      }}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => playSound('hover')}
+      onMouseLeave={resetRot}
     >
-      <div className="project-image">
+      {/* Image */}
+      <motion.div layoutId={`project-image-${project.id}`} className="card-image">
         <img src={project.imageUrl} alt={project.title} loading="lazy" />
-        
-        {/* QR code for physical-digital connection */}
-        {isHovered && (
-          <div className="project-qr">
-            <img 
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`https://example.com/projects/${project.id}`)}`} 
-              alt="QR Code" 
-              className="qr-code"
-            />
-            <span>Scan for GitHub Repo</span>
+        <div className="card-img-overlay" />
+        <span className="card-category">{project.category}</span>
+        {project.liveUrl && (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="card-live-badge"
+            onClick={(e) => { e.stopPropagation(); playSound('click'); }}
+            aria-label="Live site"
+          >
+            <span className="live-pulse" />
+            Live
+          </a>
+        )}
+      </motion.div>
+
+      {/* Body */}
+      <div className="card-body">
+        <div className="card-meta-row">
+          <span className="card-index">{num}</span>
+        </div>
+
+        <h3 className="card-title">{project.title}</h3>
+        <p className="card-desc">{project.description}</p>
+
+        {project.stack && project.stack.length > 0 && (
+          <div className="card-stack">
+            {project.stack.map(t => (
+              <span key={t} className="card-tag">{t}</span>
+            ))}
           </div>
         )}
+
+        <Link
+          to={`/projects/${project.id}`}
+          className="card-cta"
+          onClick={() => playSound('click')}
+        >
+          View Project
+          <span className="card-cta-arrow">↗</span>
+        </Link>
       </div>
-      
-      <div className="project-content">
-        <h3>{project.title}</h3>
-        <p className="project-category">{project.category}</p>
-        <p className="project-description">{project.description}</p>
-        
-        <div className="project-links">
-          <Link to={`/projects/${project.id}`} className="view-link">
-            <span>View Project</span>
-            <ArrowRight size={16} />
-          </Link>
-          
-          {project.liveUrl && (
-            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="external-link">
-              <ExternalLink size={16} />
-            </a>
-          )}
-        </div>
-      </div>
-      
+
       <style jsx>{`
         .project-card {
-          background-color: var(--card);
+          position: relative;
+          background: rgba(255,255,255,0.028);
+          border: 1px solid rgba(255,255,255,0.07);
           border-radius: var(--radius-lg);
           overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-          transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s ease;
-          cursor: pointer;
           transform-style: preserve-3d;
+          transition: transform 0.25s cubic-bezier(0.22,1,0.36,1),
+                      border-color 0.28s ease;
+          will-change: transform;
+        }
+
+        /* Red border wipe */
+        .project-card::after {
+          content: '';
+          position: absolute;
+          inset: -1px;
+          border-radius: var(--radius-lg);
+          border: 1.5px solid var(--color-accent);
           opacity: 0;
-          transform: translateY(30px);
+          transform: scaleX(0);
+          transform-origin: left center;
+          transition: transform 0.4s var(--ease-out-expo), opacity 0.08s ease;
+          pointer-events: none;
+          z-index: 4;
         }
-        
-        .project-card.in-view {
-          animation: slideInUp 0.6s forwards;
-        }
-        
-        .project-card:hover {
-          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .project-image {
-          width: 100%;
-          height: 200px;
-          overflow: hidden;
+        .project-card:hover::after { opacity: 1; transform: scaleX(1); }
+
+        /* ── Image ─────────────────────────────────────────────────────── */
+        .card-image {
           position: relative;
+          height: 215px;
+          overflow: hidden;
         }
-        
-        .project-image img {
+        .card-image img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: all 0.5s ease;
-          transform: scale(1.01);
+          display: block;
+          transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
         }
-        
-        .project-card:hover .project-image img {
-          transform: scale(1.1);
+        .project-card:hover .card-image img { transform: scale(1.06); }
+
+        .card-img-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(6,6,10,0.82) 0%, transparent 55%);
+          pointer-events: none;
         }
-        
-        .project-content {
-          padding: 20px;
-          transform: translateZ(20px);
-        }
-        
-        .project-content h3 {
-          margin-bottom: 8px;
-          font-size: 1.5rem;
-          position: relative;
-          display: inline-block;
-        }
-        
-        .project-category {
-          color: var(--color-accent);
-          font-size: 0.9rem;
+
+        /* Category chip — bottom-right of image */
+        .card-category {
+          position: absolute;
+          bottom: 10px;
+          right: 11px;
+          z-index: 2;
+          font-family: var(--font-mono);
+          font-size: 0.58rem;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
-          letter-spacing: 1px;
-          margin-bottom: 10px;
-          font-weight: 500;
+          color: rgba(255,255,255,0.65);
+          background: rgba(0,0,0,0.52);
+          border: 1px solid rgba(255,255,255,0.11);
+          padding: 3px 9px;
+          border-radius: var(--radius-full);
+          pointer-events: none;
         }
-        
-        .project-description {
-          color: var(--color-muted);
-          margin-bottom: 20px;
-          font-size: 0.95rem;
-          line-height: 1.5;
-        }
-        
-        .project-links {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        
-        .view-link {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          color: var(--text);
-          font-weight: 500;
-          transition: all 0.3s ease;
-        }
-        
-        .view-link:hover {
-          color: var(--color-accent);
-          gap: 8px;
-          text-decoration: none;
-        }
-        
-        .external-link {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background-color: rgba(0, 0, 0, 0.05);
-          transition: all 0.3s ease;
-        }
-        
-        .external-link:hover {
-          background-color: var(--color-accent);
-          color: white;
-        }
-        
-        .project-qr {
+
+        /* Live badge — top-left of image */
+        .card-live-badge {
           position: absolute;
           top: 10px;
-          right: 10px;
-          background-color: rgba(255, 255, 255, 0.9);
-          border-radius: var(--radius-md);
-          padding: 10px;
-          display: flex;
-          flex-direction: column;
+          left: 11px;
+          z-index: 2;
+          display: inline-flex;
           align-items: center;
-          transform: translateZ(40px);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-          animation: scaleIn 0.3s forwards;
+          gap: 5px;
+          font-family: var(--font-mono);
+          font-size: 0.58rem;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.75);
+          background: rgba(0,0,0,0.52);
+          border: 1px solid rgba(233,69,96,0.32);
+          padding: 3px 9px;
+          border-radius: var(--radius-full);
+          text-decoration: none;
+          transition: background 0.2s ease;
         }
-        
-        .qr-code {
-          width: 80px;
-          height: 80px;
-          margin-bottom: 5px;
+        .card-live-badge:hover { background: rgba(233,69,96,0.14); }
+
+        .live-pulse {
+          display: block;
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: var(--color-accent);
+          animation: livePulse 2s ease-in-out infinite;
+          flex-shrink: 0;
         }
-        
-        .project-qr span {
-          font-size: 0.8rem;
-          color: var(--color-primary);
-          font-weight: 500;
+        @keyframes livePulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50%       { opacity: 0.45; transform: scale(0.7); }
         }
-        
+
+        /* ── Body ──────────────────────────────────────────────────────── */
+        .card-body {
+          padding: 20px;
+          transform: translateZ(10px);
+        }
+
+        .card-meta-row {
+          margin-bottom: 10px;
+        }
+
+        .card-index {
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          letter-spacing: 0.14em;
+          color: var(--color-muted);
+        }
+
+        .card-title {
+          font-size: 1.1rem;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          color: var(--text);
+          margin-bottom: 8px;
+          line-height: 1.3;
+        }
+
+        .card-desc {
+          font-size: 0.875rem;
+          color: rgba(255,255,255,0.45);
+          line-height: 1.65;
+          margin-bottom: 14px;
+        }
+
+        /* Stack chips */
+        .card-stack {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+          margin-bottom: 18px;
+        }
+        .card-tag {
+          font-family: var(--font-mono);
+          font-size: 0.58rem;
+          letter-spacing: 0.06em;
+          color: rgba(255,255,255,0.38);
+          border: 1px solid rgba(255,255,255,0.09);
+          padding: 2px 8px;
+          border-radius: var(--radius-full);
+        }
+
+        /* CTA */
+        .card-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.78rem;
+          font-weight: 600;
+          font-family: var(--font-mono);
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.65);
+          text-decoration: none;
+          padding: 8px 16px;
+          border: 1px solid rgba(255,255,255,0.13);
+          border-radius: var(--radius-full);
+          background: rgba(255,255,255,0.035);
+          transition: color 0.22s ease,
+                      border-color 0.22s ease,
+                      background 0.22s ease,
+                      gap 0.22s var(--ease-out-expo);
+        }
+        .card-cta:hover {
+          color: var(--color-accent);
+          border-color: rgba(233,69,96,0.45);
+          background: rgba(233,69,96,0.08);
+          gap: 12px;
+        }
+
+        .card-cta-arrow {
+          display: inline-block;
+          font-style: normal;
+          transition: transform 0.25s var(--ease-out-expo);
+        }
+        .card-cta:hover .card-cta-arrow { transform: translate(2px, -2px); }
+
         @media (max-width: 768px) {
-          .project-card {
-            margin-bottom: 20px;
-          }
-          
-          .project-content {
-            padding: 15px;
-          }
-          
-          .project-content h3 {
-            font-size: 1.2rem;
-          }
-          
-          .project-qr {
-            display: none;
-          }
+          .card-body  { padding: 16px; }
+          .card-title { font-size: 1rem; }
         }
       `}</style>
     </div>

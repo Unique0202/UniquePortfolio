@@ -1,563 +1,523 @@
 import React, { useState, useRef } from 'react';
-import { Send, MapPin, Phone, Mail, Github, Linkedin, Instagram } from 'lucide-react';
+import { Send, MapPin, Mail, Github, Linkedin, Instagram } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAudio } from '../context/AudioContext';
 
+const EASE = [0.22, 1, 0.36, 1];
+
+const feedbackVariants = {
+  hidden:  { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0,   transition: { duration: 0.35, ease: EASE } },
+  exit:    { opacity: 0, y: -10, transition: { duration: 0.2 } },
+};
+
+const FloatingField = ({
+  id, name, label, type = 'text', value, onChange, required, as: Tag = 'input', rows, onKeyDown,
+}) => {
+  const [focused, setFocused] = useState(false);
+  const active = focused || value.length > 0;
+
+  return (
+    <div className="floating-field">
+      <Tag
+        id={id}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        onKeyDown={onKeyDown}
+        required={required}
+        className={Tag === 'textarea' ? 'form-textarea ff-input' : 'form-input ff-input'}
+        rows={rows}
+        placeholder=""
+      />
+      <motion.label
+        htmlFor={id}
+        className="floating-label"
+        animate={
+          active
+            ? { y: -8, scale: 0.78, color: 'var(--color-accent)' }
+            : { y: 0,  scale: 1,    color: 'rgba(255,255,255,0.35)' }
+        }
+        transition={{ duration: 0.22, ease: EASE }}
+        style={{ originX: 0, originY: 0.5 }}
+      >
+        {label}
+      </motion.label>
+    </div>
+  );
+};
+
+const SOCIALS = [
+  { href: 'https://github.com/Unique0202',                   icon: <Github size={17} />,    label: 'GitHub'    },
+  { href: 'https://www.linkedin.com/in/unique-k-71064a28a/', icon: <Linkedin size={17} />,  label: 'LinkedIn'  },
+  { href: 'https://www.instagram.com/unique.02.02/',         icon: <Instagram size={17} />, label: 'Instagram' },
+];
+
+const INFO = [
+  { icon: <MapPin size={16} />, label: 'Location', value: 'New Delhi, India'     },
+  { icon: <Mail size={16} />,   label: 'Email',    value: 'uniquek0202@gmail.com' },
+];
+
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState(false);
-  const formRef = useRef(null);
-  const { playSound } = useAudio();
-  
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [status, setStatus]     = useState('idle');
+  const formRef                 = useRef(null);
+  const { playSound, playKey }  = useAudio();
+
+  const handleKeyDown = (e) => {
+    if      (e.key === 'Enter')                         playKey('enter');
+    else if (e.key === 'Backspace' || e.key === 'Delete') playKey('backspace');
+    else if (e.key === ' ')                              playKey('space');
+    else if (e.key.length === 1)                         playKey('regular');
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSending(true);
+    setStatus('sending');
 
-    emailjs.sendForm(
-      'service_2nqw5mc',         // Service ID
-      'template_f81b3aa',        // Template ID
-      formRef.current,
-      'MMmQdXHE9G1xWitAg'          // User API Key
-    )
-    .then((result) => {
-      setSent(true);
-      playSound('success');
-      
-      // Haptic feedback for success
-      if (navigator.vibrate) {
-        navigator.vibrate([50, 100, 50]);
-      }
-      
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+    emailjs
+      .sendForm('service_2nqw5mc', 'template_f81b3aa', formRef.current, 'MMmQdXHE9G1xWitAg')
+      .then(() => {
+        setStatus('sent');
+        playSound('success');
+        if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      })
+      .catch(() => {
+        setStatus('error');
+        playSound('error');
+        if (navigator.vibrate) navigator.vibrate(100);
       });
-    }, (error) => {
-      setError(true);
-      playSound('error');
-      
-      // Haptic feedback for error
-      if (navigator.vibrate) {
-        navigator.vibrate(100);
-      }
-    })
-    .finally(() => {
-      setSending(false);
-    });
   };
-  
-  // Reset success/error messages
-  const resetMessages = () => {
-    setSent(false);
-    setError(false);
-  };
-  
+
   return (
     <div className="contact-page">
       <div className="container">
-        <header className="contact-header">
-          <h1>Get In Touch</h1>
-          <p className="lead">
-            Interested in working together or have questions about my portfolio?
-            Feel free to reach out.
+
+        {/* ── Header ───────────────────────────────────────────────────────── */}
+        <motion.header
+          className="contact-header"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+        >
+          <p className="contact-eyebrow">// 05 CONTACT</p>
+          <h1 className="contact-title">Let's Talk.</h1>
+          <p className="contact-lead">
+            Interested in working together, have a question, or just want
+            to say hey? Drop me a message.
           </p>
-        </header>
-        
-        <div className="contact-content">
-          <div className="contact-form-container">
-            <h2>Send a Message</h2>
-            
-            {sent && (
-              <div className="message success">
-                <p>Your message has been sent successfully!</p>
-                <button onClick={resetMessages} className="dismiss-btn">
-                  Send Another Message
-                </button>
-              </div>
-            )}
-            
-            {error && (
-              <div className="message error">
-                <p>Something went wrong. Please try again.</p>
-                <button onClick={resetMessages} className="dismiss-btn">
-                  Try Again
-                </button>
-              </div>
-            )}
-            
-            {!sent && !error && (
-              <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
-                <div className="form-group">
-                  <label htmlFor="name">Your Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Enter your name"
-                    className="form-input"
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="email">Email Address</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="Enter your email"
-                    className="form-input"
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="subject">Subject</label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    placeholder="What's this regarding?"
-                    className="form-input"
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="message">Your Message</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    placeholder="Write your message here..."
-                    className="form-textarea"
-                    rows="5"
-                  ></textarea>
-                </div>
-                
-                <button
-                  type="submit"
-                  className={`submit-btn ${sending ? 'sending' : ''}`}
-                  disabled={sending}
+        </motion.header>
+
+        {/* ── Two-column layout ────────────────────────────────────────────── */}
+        <div className="contact-layout">
+
+          {/* Form panel */}
+          <motion.div
+            className="contact-panel form-panel"
+            initial={{ opacity: 0, x: -28 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
+          >
+            <p className="panel-eyebrow">// SEND A MESSAGE</p>
+
+            <AnimatePresence mode="wait">
+              {status === 'sent' ? (
+                <motion.div
+                  key="success"
+                  className="feedback success"
+                  variants={feedbackVariants}
+                  initial="hidden" animate="visible" exit="exit"
                 >
-                  {sending ? (
-                    <>
-                      <span className="spinner"></span>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message
-                      <Send size={16} />
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
-          </div>
-          
-          <div className="contact-info">
-            <div className="info-section">
-              <h2>Contact Information</h2>
-              
-              <div className="info-items">
-                <div className="info-item">
-                  <div className="info-icon">
-                    <MapPin size={20} />
+                  <p>Message sent! I'll get back to you soon.</p>
+                  <button className="dismiss-btn" onClick={() => setStatus('idle')}>
+                    Send Another
+                  </button>
+                </motion.div>
+              ) : status === 'error' ? (
+                <motion.div
+                  key="error"
+                  className="feedback error"
+                  variants={feedbackVariants}
+                  initial="hidden" animate="visible" exit="exit"
+                >
+                  <p>Something went wrong. Please try again.</p>
+                  <button className="dismiss-btn" onClick={() => setStatus('idle')}>
+                    Try Again
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  ref={formRef}
+                  onSubmit={handleSubmit}
+                  className="contact-form"
+                  variants={feedbackVariants}
+                  initial="hidden" animate="visible" exit="exit"
+                >
+                  <div className="form-row">
+                    <FloatingField id="name"    name="name"    label="Your Name"      value={formData.name}    onChange={handleChange} required                        onKeyDown={handleKeyDown} />
+                    <FloatingField id="email"   name="email"   label="Email Address"  value={formData.email}   onChange={handleChange} required type="email"           onKeyDown={handleKeyDown} />
                   </div>
-                  <div className="info-text">
-                    <h3>Location</h3>
-                    <p>New Delhi, India</p>
+                  <FloatingField   id="subject" name="subject" label="Subject"        value={formData.subject} onChange={handleChange} required                        onKeyDown={handleKeyDown} />
+                  <FloatingField   id="message" name="message" label="Your Message"   value={formData.message} onChange={handleChange} required as="textarea" rows={5} onKeyDown={handleKeyDown} />
+
+                  <button
+                    type="submit"
+                    className={`submit-btn ${status === 'sending' ? 'sending' : ''}`}
+                    disabled={status === 'sending'}
+                    onClick={() => playSound('click')}
+                  >
+                    {status === 'sending' ? (
+                      <><span className="spinner" /> Sending…</>
+                    ) : (
+                      <>Send Message <Send size={15} /></>
+                    )}
+                  </button>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Info panel */}
+          <motion.div
+            className="contact-panel info-panel"
+            initial={{ opacity: 0, x: 28 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
+          >
+            <p className="panel-eyebrow">// REACH ME</p>
+
+            <div className="info-items">
+              {INFO.map(item => (
+                <div key={item.label} className="info-item">
+                  <div className="info-icon">{item.icon}</div>
+                  <div>
+                    <p className="info-label">{item.label}</p>
+                    <p className="info-value">{item.value}</p>
                   </div>
                 </div>
-                
-                <div className="info-item">
-                  <div className="info-icon">
-                    <Phone size={20} />
-                  </div>
-                  <div className="info-text">
-                    <h3>Phone</h3>
-                    <p>+91 9810215968</p>
-                  </div>
-                </div>
-                
-                <div className="info-item">
-                  <div className="info-icon">
-                    <Mail size={20} />
-                  </div>
-                  <div className="info-text">
-                    <h3>Email</h3>
-                    <p>uniquek0202@gmail.com</p>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-            
-            <div className="info-section">
-              <h2>Follow Me</h2>
-              
+
+            <div className="social-section">
+              <p className="panel-eyebrow" style={{ marginBottom: '14px' }}>// ELSEWHERE</p>
               <div className="social-links">
-                <a 
-                  href="https://github.com/Unique0202" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  className="social-link"
-                  onClick={() => playSound('click')}
-                >
-                  <Github size={20} />
-                  <span>GitHub</span>
-                </a>
-                
-                <a 
-                  href="https://www.linkedin.com/in/unique-k-71064a28a/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  className="social-link"
-                  onClick={() => playSound('click')}
-                >
-                  <Linkedin size={20} />
-                  <span>LinkedIn</span>
-                </a>
-                
-                <a 
-                  href="https://www.instagram.com/unique.02.02/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="social-link"
-                  onClick={() => playSound('click')}
-                >
-                  <Instagram size={20} />
-                  <span>Instagram</span>
-                </a>
+                {SOCIALS.map(s => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-pill"
+                    onMouseEnter={() => playSound('hover')}
+                    onClick={() => playSound('click')}
+                    aria-label={s.label}
+                  >
+                    {s.icon}
+                    {s.label}
+                  </a>
+                ))}
               </div>
             </div>
-            
-            <div className="info-section qr-section">
-              <h2>Scan to Connect</h2>
-              
-              <div className="qr-code">
-                <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.linkedin.com/in/unique-k-71064a28a/" 
-                  alt="Contact QR Code" 
-                  loading="lazy"
-                />
-                <p>Scan to add contact information</p>
-              </div>
+
+            <div className="availability-note">
+              <span className="avail-dot" />
+              Available for freelance &amp; internship opportunities
             </div>
-          </div>
+          </motion.div>
+
         </div>
       </div>
 
-
-      
       <style jsx>{`
         .contact-page {
-          padding-top: 60px;
-          padding-bottom: 60px;
+          padding: 60px 0 100px;
+          min-height: 100vh;
         }
-        
-        .contact-header {
-          text-align: center;
-          margin-bottom: var(--space-5);
-        }
-        
-        .contact-header h1 {
+
+        /* ── Header ─────────────────────────────────────────────────────── */
+        .contact-header { margin-bottom: var(--space-5); }
+
+        .contact-eyebrow {
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--color-accent);
           margin-bottom: var(--space-2);
+          opacity: 0.85;
         }
-        
-        .contact-header .lead {
-          max-width: 600px;
-          margin: 0 auto;
+
+        .contact-title {
+          font-size: clamp(2.8rem, 7vw, 6rem);
+          font-weight: 900;
+          letter-spacing: -0.04em;
+          line-height: 0.95;
+          margin-bottom: var(--space-3);
         }
-        
-        .contact-content {
+
+        .contact-lead {
+          font-size: 1rem;
+          color: var(--color-muted);
+          max-width: 48ch;
+          line-height: 1.7;
+          margin: 0;
+        }
+
+        /* ── Layout ─────────────────────────────────────────────────────── */
+        .contact-layout {
           display: grid;
           grid-template-columns: 3fr 2fr;
-          gap: var(--space-5);
+          gap: var(--space-4);
+          align-items: start;
         }
-        
-        .contact-form-container,
-        .contact-info {
-          background-color: var(--card);
+
+        /* ── Panels ─────────────────────────────────────────────────────── */
+        .contact-panel {
+          background: rgba(255,255,255,0.025);
+          border: 1px solid rgba(255,255,255,0.07);
           border-radius: var(--radius-lg);
           padding: var(--space-4);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
-        
-        .contact-form-container h2,
-        .contact-info h2 {
+
+        .panel-eyebrow {
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--color-accent);
+          opacity: 0.75;
           margin-bottom: var(--space-3);
+        }
+
+        /* ── Floating field ─────────────────────────────────────────────── */
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0 var(--space-3);
+        }
+
+        .floating-field {
           position: relative;
-          display: inline-block;
+          margin-bottom: var(--space-3);
         }
-        
-        .contact-form-container h2::after,
-        .contact-info h2::after {
-          content: '';
+
+        .floating-label {
           position: absolute;
-          bottom: -5px;
-          left: 0;
-          width: 40px;
-          height: 2px;
-          background-color: var(--color-accent);
+          left: 14px;
+          top: 14px;
+          pointer-events: none;
+          font-size: 0.9rem;
+          transform-origin: left center;
         }
-        
-        .message {
+
+        .ff-input {
+          padding: 22px 14px 6px;
+          width: 100%;
+          border: 1px solid rgba(255,255,255,0.09);
+          border-radius: var(--radius-md);
+          background: rgba(255,255,255,0.04);
+          color: var(--text);
+          font-family: inherit;
+          font-size: 0.95rem;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .ff-input:focus {
+          border-color: var(--color-accent);
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(233,69,96,0.12);
+        }
+
+        .form-textarea.ff-input {
+          resize: vertical;
+          min-height: 130px;
+        }
+
+        /* ── Feedback ───────────────────────────────────────────────────── */
+        .feedback {
           padding: var(--space-3);
           border-radius: var(--radius-md);
           margin-bottom: var(--space-3);
-          animation: fadeIn 0.5s ease;
         }
-        
-        .message.success {
-          background-color: rgba(76, 175, 80, 0.1);
-          border: 1px solid var(--color-success);
+        .feedback.success {
+          background: rgba(76,175,80,0.08);
+          border: 1px solid rgba(76,175,80,0.35);
         }
-        
-        .message.error {
-          background-color: rgba(244, 67, 54, 0.1);
-          border: 1px solid var(--color-error);
+        .feedback.error {
+          background: rgba(244,67,54,0.08);
+          border: 1px solid rgba(244,67,54,0.35);
         }
-        
-        .message p {
-          margin-bottom: var(--space-2);
-        }
-        
+        .feedback p { margin-bottom: var(--space-2); }
+
         .dismiss-btn {
-          padding: 8px 16px;
-          background-color: var(--card);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-md);
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        
-        .dismiss-btn:hover {
-          background-color: var(--bg);
-        }
-        
-        .contact-form {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-3);
-        }
-        
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 5px;
-        }
-        
-        .form-group label {
-          font-size: 0.9rem;
-          font-weight: 500;
-        }
-        
-        .form-input,
-        .form-textarea {
-          padding: 12px 15px;
-          border: 1px solid var(--border);
-          border-radius: var(--radius-md);
-          background-color: var(--bg);
+          padding: 7px 16px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: var(--radius-full);
           color: var(--text);
-          font-family: inherit;
-          transition: border-color 0.3s ease;
+          font-size: 0.82rem;
+          cursor: pointer;
+          transition: background 0.2s ease;
         }
-        
-        .form-input:focus,
-        .form-textarea:focus {
-          border-color: var(--color-accent);
-          outline: none;
-          box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
-        }
-        
-        .form-textarea {
-          resize: vertical;
-          min-height: 120px;
-        }
-        
+        .dismiss-btn:hover { background: rgba(255,255,255,0.1); }
+
+        .contact-form { display: flex; flex-direction: column; }
+
+        /* ── Submit button ──────────────────────────────────────────────── */
         .submit-btn {
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
-          padding: 12px 20px;
-          background-color: var(--color-accent);
-          color: white;
+          width: 100%;
+          padding: 13px 24px;
+          background: var(--color-accent);
+          color: #fff;
           border: none;
-          border-radius: var(--radius-md);
-          font-weight: 500;
+          border-radius: var(--radius-full);
+          font-size: 0.88rem;
+          font-weight: 600;
+          letter-spacing: 0.02em;
           cursor: pointer;
-          transition: all 0.3s ease;
           margin-top: var(--space-2);
+          transition: background 0.22s ease, transform 0.22s ease;
         }
-        
         .submit-btn:hover:not(:disabled) {
-          background-color: #d13652;
+          background: #d13652;
           transform: translateY(-2px);
         }
-        
-        .submit-btn:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-        
-        .submit-btn.sending {
-          background-color: var(--color-accent);
-        }
-        
+        .submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
         .spinner {
-          width: 16px;
-          height: 16px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
+          width: 15px; height: 15px;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-top-color: #fff;
           border-radius: 50%;
-          border-top-color: white;
-          animation: spin 1s linear infinite;
-          margin-right: 8px;
+          animation: spin 0.8s linear infinite;
         }
-        
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        
-        .contact-info {
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Info panel ─────────────────────────────────────────────────── */
+        .info-panel {
           display: flex;
           flex-direction: column;
           gap: var(--space-4);
         }
-        
-        .info-section {
-          margin-bottom: var(--space-3);
-        }
-        
+
         .info-items {
           display: flex;
           flex-direction: column;
-          gap: var(--space-3);
-          margin-top: var(--space-3);
+          gap: 16px;
         }
-        
+
         .info-item {
           display: flex;
-          align-items: flex-start;
-          gap: var(--space-2);
+          align-items: center;
+          gap: 14px;
         }
-        
+
         .info-icon {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 40px;
-          height: 40px;
-          background-color: rgba(233, 69, 96, 0.1);
+          width: 36px; height: 36px;
+          background: rgba(233,69,96,0.1);
           color: var(--color-accent);
           border-radius: 50%;
           flex-shrink: 0;
         }
-        
-        .info-text h3 {
-          font-size: 1rem;
-          margin-bottom: 2px;
-        }
-        
-        .info-text p {
+
+        .info-label {
+          font-family: var(--font-mono);
+          font-size: 0.6rem;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
           color: var(--color-muted);
+          margin: 0 0 2px;
+        }
+
+        .info-value {
+          font-size: 0.9rem;
+          color: rgba(255,255,255,0.7);
           margin: 0;
         }
-        
+
+        /* Social pills */
         .social-links {
           display: flex;
           flex-direction: column;
-          gap: var(--space-2);
-          margin-top: var(--space-3);
+          gap: 8px;
         }
-        
-        .social-link {
-          display: flex;
+
+        .social-pill {
+          display: inline-flex;
           align-items: center;
           gap: 10px;
-          padding: 10px 15px;
-          background-color: rgba(0, 0, 0, 0.03);
-          border-radius: var(--radius-md);
-          transition: all 0.3s ease;
-          color: var(--text);
+          padding: 9px 16px;
+          border: 1px solid rgba(255,255,255,0.09);
+          border-radius: var(--radius-full);
+          background: rgba(255,255,255,0.03);
+          font-size: 0.82rem;
+          font-weight: 500;
+          color: rgba(255,255,255,0.55);
+          text-decoration: none;
+          transition: color 0.2s ease, border-color 0.2s ease,
+                      background 0.2s ease, transform 0.25s var(--ease-out-expo);
         }
-        
-        .social-link:hover {
-          background-color: var(--color-accent);
-          color: white;
-          transform: translateX(5px);
+        .social-pill:hover {
+          color: var(--color-accent);
+          border-color: rgba(233,69,96,0.4);
+          background: rgba(233,69,96,0.07);
+          transform: translateX(4px);
           text-decoration: none;
         }
-        
-        .qr-section {
-          text-align: center;
+
+        /* Availability note */
+        .availability-note {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          letter-spacing: 0.06em;
+          color: rgba(255,255,255,0.4);
+          padding: 10px 14px;
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: var(--radius-full);
         }
-        
-        .qr-code {
-          margin-top: var(--space-3);
+
+        .avail-dot {
+          width: 7px; height: 7px;
+          border-radius: 50%;
+          background: #4caf50;
+          flex-shrink: 0;
+          animation: pulse 2.4s ease-in-out infinite;
         }
-        
-        .qr-code img {
-          max-width: 150px;
-          height: auto;
-          margin-bottom: var(--space-2);
-          border-radius: var(--radius-md);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        @keyframes pulse {
+          0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+          50%       { opacity: 0.7; box-shadow: 0 0 0 4px rgba(76,175,80,0); }
         }
-        
-        .qr-code p {
-          font-size: 0.9rem;
-          color: var(--color-muted);
+
+        /* ── Responsive ─────────────────────────────────────────────────── */
+        @media (max-width: 960px) {
+          .contact-layout { grid-template-columns: 1fr; }
+          .info-panel     { order: -1; }
         }
-        
-        @media (max-width: 992px) {
-          .contact-content {
-            grid-template-columns: 1fr;
-            gap: var(--space-4);
-          }
-          
-          .contact-info {
-            order: -1;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .contact-form-container,
-          .contact-info {
-            padding: var(--space-3);
-          }
-          
-          .info-items {
-            gap: var(--space-2);
-          }
+
+        @media (max-width: 640px) {
+          .form-row       { grid-template-columns: 1fr; gap: 0; }
+          .contact-panel  { padding: var(--space-3); }
         }
       `}</style>
     </div>

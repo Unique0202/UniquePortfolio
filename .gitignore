@@ -21,3 +21,12 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.claude/
+
+# Planning / notes
+REDESIGN.md
+improvement/
+
+# Root-level PDF (source copy — public/Unique_wg_Resume.pdf is the served asset)
+/Unique_wg_Resume.pdf

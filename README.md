@@ -1,70 +1,111 @@
-# Getting Started with Create React App
+# Unique Kumar — Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Personal portfolio website built with React and Framer Motion. Dark engineering aesthetic, synthesized audio feedback, and a public guestbook.
 
-## Available Scripts
+**Live:** [uniquekumar.dev](https://uniquekumar.dev) <!-- update with actual URL -->
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+| Layer | Technology |
+|---|---|
+| Framework | React 19 (Create React App) |
+| Animations | Framer Motion 12 |
+| Routing | React Router v6 |
+| Database | Firebase Firestore (guestbook) |
+| Email | EmailJS (contact form) |
+| Audio | Web Audio API (synthesized, no MP3s) |
+| Icons | Lucide React |
+| Fonts | JetBrains Mono · Inter |
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Page transitions** — clip-path reveal on enter, fade on exit
+- **Shared-element transition** — project card image morphs into detail hero via `layoutId`
+- **Scroll progress rail** — fixed right-side indicator on all pages
+- **Synthesized audio** — click, hover, success/error tones + mechanical keyboard sounds in the contact form; ambient drone toggle
+- **Public guestbook** — real-time Firestore feed; all visitors share the same notes
+- **Custom cursor** — dot + ring that tracks mouse position
+- **PageIntro** — branded loading screen on first visit (session-gated)
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Open [http://localhost:3000](http://localhost:3000).
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Firebase Setup (Guestbook)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The guestbook requires a free Firebase project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Go to [console.firebase.google.com](https://console.firebase.google.com) and create a project
+2. Add a **Web app** and copy the config object
+3. Go to **Build → Firestore Database → Create database** (start in test mode)
+4. Paste your values into `src/firebase.js`:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```js
+const firebaseConfig = {
+  apiKey:            "...",
+  authDomain:        "....firebaseapp.com",
+  projectId:         "...",
+  storageBucket:     "....appspot.com",
+  messagingSenderId: "...",
+  appId:             "...",
+};
+```
 
-## Learn More
+Until configured, the guestbook shows a setup prompt instead of erroring.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Project Structure
 
-### Code Splitting
+```
+src/
+├── pages/
+│   ├── Home.js          # Hero, bento grid, stats, skills
+│   ├── About.js         # Timeline, philosophy, awards
+│   ├── Projects.js      # Filterable project grid
+│   ├── ProjectDetail.js # Parallax hero, gallery, sidebar
+│   └── Contact.js       # EmailJS form, social links
+├── components/
+│   ├── Navigation.js    # Floating pill nav + mobile bar
+│   ├── ProjectCard.js   # 3D tilt card with red border wipe
+│   ├── SocialPresence.js# Firestore guestbook widget
+│   ├── AudioController.js # Mute toggle + ambient drone
+│   ├── CustomCursor.js  # Dot + ring cursor
+│   ├── ScrollRail.js    # Fixed scroll progress indicator
+│   ├── PageIntro.js     # First-visit branded loader
+│   ├── Reveal.js        # whileInView animation wrapper
+│   └── Footer.js        # Three-column footer
+├── context/
+│   ├── AudioContext.js  # Web Audio API synth engine
+│   └── ThemeContext.js  # Dark/light toggle
+└── firebase.js          # Firestore initialisation
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Environment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+No `.env` file needed. EmailJS keys are in `Contact.js`. Firebase config goes in `firebase.js`. Neither file contains secrets — both are public-facing client configs.
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Build
 
-### Advanced Configuration
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Output goes to `/build`. Deploy to Netlify, Vercel, or any static host.

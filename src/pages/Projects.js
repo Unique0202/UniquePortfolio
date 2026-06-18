@@ -1,380 +1,251 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Filter, Search, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProjectCard from '../components/ProjectCard';
 import { useAudio } from '../context/AudioContext';
 import AMS1 from '../assets/ams1.jpg';
-import AB1 from '../assets/ab1.jpg';
+import AB1  from '../assets/ab1.jpg';
 import FOS1 from '../assets/fos1.jpg';
 
+const EASE = [0.22, 1, 0.36, 1];
+
+const ALL_PROJECTS = [
+  {
+    id: 'lab-inventory-system',
+    title: 'Lab Inventory Management System',
+    category: 'Full-Stack',
+    description: 'Role-based system deployed live at IIIT Delhi — tracks 200+ equipment items with low-stock alerts and purchase request workflows.',
+    stack: ['React', 'Node.js', 'PostgreSQL', 'Prisma'],
+    imageUrl: AMS1,
+    liveUrl: 'https://lab-mgmt.iiitd.edu.in',
+  },
+  {
+    id: 'ai-tutor-dyslexia',
+    title: 'AI Tutor for Dyslexic Students',
+    category: 'AI / ML',
+    description: 'Adaptive learning platform with gamified reading modules — 70% of participants showed measurable improvement in reading speed.',
+    stack: ['Python', 'HTML/CSS/JS', 'AI/ML'],
+    imageUrl: FOS1,
+    liveUrl: null,
+  },
+  {
+    id: 'airport-management-system',
+    title: 'Airport Management System',
+    category: 'Full-Stack',
+    description: 'Full-stack platform for booking airport facilities and viewing real-time flight details via role-based interactive portals.',
+    stack: ['React', 'Flask', 'PostgreSQL'],
+    imageUrl: AMS1,
+    liveUrl: null,
+  },
+  {
+    id: 'angry-birds',
+    title: 'Angry Birds Game',
+    category: 'Game',
+    description: 'Multi-level physics game with interactive UI, dynamic level saving/loading, and touch-based controls — built from scratch in Java.',
+    stack: ['Java', 'LibGDX', 'Gradle'],
+    imageUrl: AB1,
+    liveUrl: null,
+  },
+  {
+    id: 'food-ordering-system',
+    title: 'Food Ordering System',
+    category: 'App',
+    description: 'Java-based ordering application with admin and customer roles, menu management, and complete order tracking.',
+    stack: ['Java', 'OOP'],
+    imageUrl: FOS1,
+    liveUrl: null,
+  },
+];
+
+const TABS = ['All', 'Full-Stack', 'AI / ML', 'Game', 'App'];
+
 const Projects = () => {
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const categoryRef = useRef(null);
+  const [activeTab, setActiveTab] = useState('All');
   const { playSound } = useAudio();
-  
-  // projects data
-  useEffect(() => {
-    const projectsData = [
-      {
-        id: 'airport-management-system',
-        title: 'Airport Management System',
-        category: 'Full Stack Website',
-        description: 'A full-stack airport management system enabling users to book facilities and view real-time flight details via an interactive interface.',
-        imageUrl: AMS1,
-        liveUrl: '#'
-      },
-      {
-        id: 'angry-birds',
-        title: 'Angry Birds Game',
-        category: 'Interactive Game',
-        description: 'A multi-level LibGDX game with interactive UI, level saving/loading, and touch-based controls built using Java and Gradle.',
-        imageUrl: AB1,
-        liveUrl: '#'
-      },
-      {
-        id: 'food-ordering-system',
-        title: 'Food Ordering System',
-        category: 'Application',
-        description: 'A Java-based food ordering system supporting admin and customer roles with robust menu, order, and sales management features.',
-        imageUrl: FOS1,
-        liveUrl: '#'
-      }
-    ];
-    
-    setProjects(projectsData);
-    setFilteredProjects(projectsData);
-    
-    // Extract unique categories
-    const uniqueCategories = [...new Set(projectsData.map(project => project.category))];
-    setCategories(uniqueCategories);
-  }, []);
-  
-  // Handle search and filter
-  useEffect(() => {
-    let results = projects;
-    
-    // Apply search term filter
-    if (searchTerm) {
-      results = results.filter(project => 
-        project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    // Apply category filter
-    if (selectedCategory) {
-      results = results.filter(project => project.category === selectedCategory);
-    }
-    
-    setFilteredProjects(results);
-  }, [searchTerm, selectedCategory, projects]);
-  
-  // Handle click outside category dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (categoryRef.current && !categoryRef.current.contains(event.target)) {
-        setIsCategoryOpen(false);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-  
-  // Handle category selection
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setIsCategoryOpen(false);
-    playSound('click');
-    
-    // Haptic feedback
-    if (navigator.vibrate) {
-      navigator.vibrate(15);
-    }
-  };
-  
-  // Clear all filters
-  const clearFilters = () => {
-    setSearchTerm('');
-    setSelectedCategory('');
-    playSound('swoosh');
-  };
-  
+
+  const filtered = activeTab === 'All'
+    ? ALL_PROJECTS
+    : ALL_PROJECTS.filter(p => p.category === activeTab);
+
   return (
     <div className="projects-page">
       <div className="container">
-        <header className="projects-header">
-          <h1>Projects</h1>
-          <p className="lead">
-            Explore my portfolio of interaction design projects focusing on multimodal experiences.
+
+        {/* ── Header ───────────────────────────────────────────────────────── */}
+        <motion.header
+          className="projects-header"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+        >
+          <p className="projects-eyebrow">// 01 WORK</p>
+          <h1 className="projects-title">Projects</h1>
+          <p className="projects-lead">
+            From live-deployed systems to interactive games — work spanning
+            full-stack engineering, AI, and creative design.
           </p>
-        </header>
-        
-        <div className="projects-filters">
-          <div className="search-bar">
-            <Search size={18} />
-            <input 
-              type="text" 
-              placeholder="Search projects..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {searchTerm && (
-              <button 
-                className="clear-search" 
-                onClick={() => setSearchTerm('')}
-                aria-label="Clear search"
+        </motion.header>
+
+        {/* ── Filter tabs ──────────────────────────────────────────────────── */}
+        <motion.div
+          className="filter-row"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.12, ease: EASE }}
+        >
+          <div className="filter-tabs">
+            {TABS.map(tab => (
+              <button
+                key={tab}
+                className={`filter-tab ${activeTab === tab ? 'active' : ''}`}
+                onClick={() => { setActiveTab(tab); playSound('click'); }}
               >
-                <X size={16} />
+                {activeTab === tab && (
+                  <motion.span
+                    className="tab-pip"
+                    layoutId="tab-pip"
+                    transition={{ duration: 0.28, ease: EASE }}
+                  />
+                )}
+                {tab}
               </button>
-            )}
+            ))}
           </div>
-          
-          <div ref={categoryRef} className="category-filter">
-            <button 
-              className="category-toggle"
-              onClick={() => {
-                setIsCategoryOpen(!isCategoryOpen);
-                playSound('pop');
-              }}
-            >
-              <Filter size={18} />
-              {selectedCategory || 'All Categories'}
-            </button>
-            
-            {isCategoryOpen && (
-              <div className="category-dropdown">
-                <div 
-                  className={`category-option ${!selectedCategory ? 'active' : ''}`}
-                  onClick={() => handleCategorySelect('')}
-                >
-                  All Categories
-                </div>
-                {categories.map((category, index) => (
-                  <div 
-                    key={index}
-                    className={`category-option ${category === selectedCategory ? 'active' : ''}`}
-                    onClick={() => handleCategorySelect(category)}
-                  >
-                    {category}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          {(searchTerm || selectedCategory) && (
-            <button className="clear-filters" onClick={clearFilters}>
-              Clear Filters
-            </button>
-          )}
-        </div>
-        
-        <div className="projects-grid">
-          {filteredProjects.length > 0 ? (
-            filteredProjects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
-            ))
-          ) : (
-            <div className="no-results">
-              <p>No projects found matching your criteria.</p>
-              <button className="reset-button" onClick={clearFilters}>
-                Reset Filters
-              </button>
-            </div>
-          )}
-        </div>
+          <span className="filter-count">
+            {filtered.length} project{filtered.length !== 1 ? 's' : ''}
+          </span>
+        </motion.div>
+
+        {/* ── Grid ────────────────────────────────────────────────────────── */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            className="projects-grid"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+          >
+            {filtered.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.08, ease: EASE }}
+              >
+                <ProjectCard project={project} index={index} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
       </div>
-      
+
       <style jsx>{`
         .projects-page {
-          padding-top: 60px;
-          padding-bottom: 60px;
+          padding: 60px 0 100px;
+          min-height: 100vh;
         }
-        
-        .projects-header {
-          text-align: center;
-          margin-bottom: var(--space-4);
-        }
-        
-        .projects-header h1 {
+
+        /* ── Header ─────────────────────────────────────────────────────── */
+        .projects-header { margin-bottom: var(--space-5); }
+
+        .projects-eyebrow {
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--color-accent);
           margin-bottom: var(--space-2);
+          opacity: 0.85;
         }
-        
-        .projects-header p {
-          max-width: 600px;
-          margin: 0 auto;
+
+        .projects-title {
+          font-size: clamp(2.8rem, 7vw, 6rem);
+          font-weight: 900;
+          letter-spacing: -0.04em;
+          line-height: 0.95;
+          margin-bottom: var(--space-3);
         }
-        
-        .projects-filters {
+
+        .projects-lead {
+          font-size: 1rem;
+          color: var(--color-muted);
+          max-width: 52ch;
+          line-height: 1.7;
+          margin: 0;
+        }
+
+        /* ── Filter ─────────────────────────────────────────────────────── */
+        .filter-row {
           display: flex;
           align-items: center;
-          gap: var(--space-3);
+          justify-content: space-between;
           margin-bottom: var(--space-4);
+          gap: var(--space-3);
           flex-wrap: wrap;
         }
-        
-        .search-bar {
-          flex: 1;
-          min-width: 250px;
+
+        .filter-tabs {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+
+        .filter-tab {
           position: relative;
-          display: flex;
+          display: inline-flex;
           align-items: center;
-          background-color: var(--card);
+          gap: 7px;
+          padding: 7px 18px;
           border-radius: var(--radius-full);
-          padding: 0 15px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .search-bar svg {
-          color: var(--color-muted);
-        }
-        
-        .search-bar input {
-          width: 100%;
-          border: none;
+          border: 1px solid rgba(255,255,255,0.09);
           background: transparent;
-          padding: 12px 10px;
-          font-size: 0.95rem;
-          color: var(--text);
-          outline: none;
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          letter-spacing: 0.06em;
+          color: rgba(255,255,255,0.42);
+          cursor: pointer;
+          transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+          white-space: nowrap;
         }
-        
-        .clear-search {
-          background: transparent;
-          border: none;
+        .filter-tab:hover {
+          color: rgba(255,255,255,0.72);
+          border-color: rgba(255,255,255,0.18);
+        }
+        .filter-tab.active {
+          color: #fff;
+          border-color: rgba(233,69,96,0.5);
+          background: rgba(233,69,96,0.1);
+        }
+
+        /* Animated pip inside active tab */
+        .tab-pip {
+          display: block;
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: var(--color-accent);
+          flex-shrink: 0;
+        }
+
+        .filter-count {
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          letter-spacing: 0.1em;
           color: var(--color-muted);
-          cursor: pointer;
-          padding: 5px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          white-space: nowrap;
         }
-        
-        .clear-search:hover {
-          color: var(--color-accent);
-        }
-        
-        .category-filter {
-          position: relative;
-        }
-        
-        .category-toggle {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background-color: var(--card);
-          border: none;
-          border-radius: var(--radius-full);
-          padding: 12px 15px;
-          font-size: 0.95rem;
-          color: var(--text);
-          cursor: pointer;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-          transition: all 0.3s ease;
-        }
-        
-        .category-toggle:hover {
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .category-dropdown {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 200px;
-          background-color: var(--card);
-          border-radius: var(--radius-md);
-          margin-top: 5px;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-          z-index: 100;
-          overflow: hidden;
-          animation: fadeIn 0.2s ease-out;
-        }
-        
-        .category-option {
-          padding: 10px 15px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        
-        .category-option:hover,
-        .category-option.active {
-          background-color: rgba(0, 0, 0, 0.05);
-          color: var(--color-accent);
-        }
-        
-        .clear-filters {
-          background-color: rgba(0, 0, 0, 0.05);
-          border: none;
-          border-radius: var(--radius-full);
-          padding: 12px 15px;
-          font-size: 0.95rem;
-          color: var(--color-muted);
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        
-        .clear-filters:hover {
-          background-color: rgba(0, 0, 0, 0.1);
-          color: var(--text);
-        }
-        
+
+        /* ── Grid ───────────────────────────────────────────────────────── */
         .projects-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
           gap: var(--space-4);
         }
-        
-        .no-results {
-          grid-column: 1 / -1;
-          text-align: center;
-          padding: var(--space-5);
-          background-color: var(--card);
-          border-radius: var(--radius-md);
-        }
-        
-        .reset-button {
-          margin-top: var(--space-3);
-          background-color: var(--color-accent);
-          color: white;
-          border: none;
-          border-radius: var(--radius-full);
-          padding: 10px 20px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        
-        .reset-button:hover {
-          background-color: #d13652;
-          transform: translateY(-2px);
-        }
-        
-        @media (max-width: 992px) {
-          .projects-grid {
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          }
-        }
-        
+
         @media (max-width: 768px) {
-          .projects-filters {
-            flex-direction: column;
-            align-items: stretch;
-          }
-          
-          .category-dropdown {
-            width: 100%;
-          }
-          
-          .projects-grid {
-            grid-template-columns: 1fr;
-          }
+          .projects-grid  { grid-template-columns: 1fr; }
+          .filter-count   { display: none; }
         }
       `}</style>
     </div>

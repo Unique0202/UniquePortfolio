@@ -1,187 +1,131 @@
-/* Animations for multimodal interactions */
+/* ============================================================
+   ANIMATIONS — keyframes + utility classes
+   Framer-motion handles most component animations.
+   These keyframes are for CSS-only situations (audio bars, etc.)
+   ============================================================ */
 
-/* Appear animations */
+/* ── Appear ── */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes slideInUp {
-    from {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideInRight {
-    from {
-      transform: translateX(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes scaleIn {
-    from {
-      transform: scale(0.9);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-  
-  /* Hover animations */
-  .hover-float {
-    transition: transform 0.3s ease;
-  }
-  
-  .hover-float:hover {
-    transform: translateY(-5px);
-  }
-  
-  .hover-scale {
-    transition: transform 0.3s ease;
-  }
-  
-  .hover-scale:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Loading animations */
-  .loading-pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
-  }
-  
-  .loading-spin {
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  /* Page transitions */
-  .page-transition-enter {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  
-  .page-transition-enter-active {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 500ms, transform 500ms;
-  }
-  
-  .page-transition-exit {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  .page-transition-exit-active {
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 500ms, transform 500ms;
-  }
-  
-  /* 3D Card Effect */
-  .card-3d {
-    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-    transform-style: preserve-3d;
-    perspective: 1000px;
-  }
-  
-  /* Cursor effects */
-  .cursor-glow {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    pointer-events: none;
-    background-color: var(--color-accent);
-    mix-blend-mode: difference;
-    position: fixed;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    transition: width 0.3s, height 0.3s, background-color 0.3s;
-  }
-  
-  /* Avatar animations */
-  @keyframes float {
-    0% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-    100% {
-      transform: translateY(0px);
-    }
-  }
-  
-  .avatar-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  /* Gesture feedback animations */
-  @keyframes swipeRight {
-    0% {
-      transform: translateX(0);
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(100px);
-      opacity: 0;
-    }
-  }
-  
-  /* Audio visualization */
-  @keyframes audioWave {
-    0% {
-      height: 5px;
-    }
-    50% {
-      height: 20px;
-    }
-    100% {
-      height: 5px;
-    }
-  }
-  
-  .audio-bar {
-    display: inline-block;
-    width: 3px;
-    background-color: var(--color-accent);
-    margin: 0 2px;
-    border-radius: var(--radius-full);
-  }
-  
-  .audio-bar:nth-child(1) { animation: audioWave 0.7s infinite; }
-  .audio-bar:nth-child(2) { animation: audioWave 1.3s infinite; }
-  .audio-bar:nth-child(3) { animation: audioWave 0.5s infinite; }
-  .audio-bar:nth-child(4) { animation: audioWave 1.1s infinite; }
-  .audio-bar:nth-child(5) { animation: audioWave 0.9s infinite; }
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* ── Clip-path reveal (used in page transitions) ── */
+@keyframes revealFromLeft {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0%   0 0); }
+}
+
+@keyframes wipeToRight {
+  from { clip-path: inset(0 0%   0 0); }
+  to   { clip-path: inset(0 100% 0 0); }
+}
+
+/* ── Rotation ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Pulse ── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* ── Float (kept for any floating elements) ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── Cursor blink ── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1.1s step-end infinite;
+}
+
+/* ── Audio wave bars (CSS-driven, no JS) ── */
+@keyframes audioWave {
+  0%, 100% { transform: scaleY(0.2); }
+  50%       { transform: scaleY(1);   }
+}
+
+.audio-bar {
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  transform-origin: bottom;
+  margin: 0 2px;
+}
+
+.audio-bar:nth-child(1) { animation: audioWave 0.70s ease-in-out infinite; }
+.audio-bar:nth-child(2) { animation: audioWave 1.30s ease-in-out infinite; }
+.audio-bar:nth-child(3) { animation: audioWave 0.50s ease-in-out infinite; }
+.audio-bar:nth-child(4) { animation: audioWave 1.10s ease-in-out infinite; }
+.audio-bar:nth-child(5) { animation: audioWave 0.90s ease-in-out infinite; }
+
+/* ── Loading utilities ── */
+.loading-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.loading-spin  { animation: spin  1s linear infinite; }
+
+/* ── 3D card base ── */
+.card-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+/* ── Hover utilities ── */
+.hover-float {
+  transition: transform var(--transition-normal);
+}
+.hover-float:hover { transform: translateY(-5px); }
+
+.hover-scale {
+  transition: transform var(--transition-normal);
+}
+.hover-scale:hover { transform: scale(1.04); }
+
+/* ── Red border wipe on hover (engineering accent) ── */
+.hover-border {
+  position: relative;
+}
+
+.hover-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid var(--color-accent);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s var(--ease-out-expo), opacity 0.1s ease;
+  pointer-events: none;
+}
+
+.hover-border:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}

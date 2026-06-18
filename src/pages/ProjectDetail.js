@@ -1,157 +1,165 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink, ChevronRight, ChevronLeft } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useAudio } from '../context/AudioContext';
 import AMS1 from '../assets/ams1.jpg';
 import AMS2 from '../assets/ams2.png';
 import AMS3 from '../assets/ams3.png';
 import AMS4 from '../assets/ams4.png';
-import AB1 from '../assets/ab1.jpg';
-import AB2 from '../assets/ab2.png';
-import AB3 from '../assets/ab3.png';
-import AB4 from '../assets/ab4.png';
-import AB5 from '../assets/ab5.png';
-import AB6 from '../assets/ab6.png';
-import AB7 from '../assets/ab7.png';
+import AB1  from '../assets/ab1.jpg';
+import AB2  from '../assets/ab2.png';
+import AB3  from '../assets/ab3.png';
+import AB4  from '../assets/ab4.png';
+import AB5  from '../assets/ab5.png';
+import AB6  from '../assets/ab6.png';
+import AB7  from '../assets/ab7.png';
 import FOS1 from '../assets/fos1.jpg';
 
+const EASE = [0.22, 1, 0.36, 1];
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: EASE, delay },
+});
+
+const PROJECTS = {
+  'lab-inventory-system': {
+    title: 'Lab Inventory Management System',
+    category: 'Full Stack Web App',
+    year: '2026',
+    overview:
+      "A live-deployed role-based inventory system for IIIT Delhi's CIPD lab. It tracks 200+ equipment items, sends low-stock notifications, and manages purchase requests — all behind a clean React dashboard with role-based access control.",
+    challenge:
+      'Designing an access-control layer that supports multiple roles (faculty, lab assistant, admin) without code duplication was the key challenge. Ensuring real-time notifications for stock thresholds while keeping the UI responsive across screen sizes added complexity.',
+    approach:
+      'Built with React and a Node.js REST API backed by PostgreSQL and Prisma ORM. I designed a normalised schema to track item history and implemented JWT-based role differentiation. Notification logic runs server-side and fires on every stock update.',
+    outcome:
+      "Successfully deployed to IIIT Delhi's infrastructure. The lab staff now manages 200+ items without spreadsheets. The clean UI and email alerts have reduced manual stock checks by an estimated 70%.",
+    mainImageUrl: AMS1,
+    gallery: [AMS1],
+    toolsUsed: ['React', 'Node.js', 'PostgreSQL', 'Prisma ORM', 'REST APIs', 'JWT Auth', 'GitHub', 'VS Code'],
+    liveUrl: 'https://lab-mgmt.iiitd.edu.in',
+  },
+  'ai-tutor-dyslexia': {
+    title: 'AI Tutor for Dyslexic Students',
+    category: 'AI / Ed-Tech',
+    year: '2025',
+    overview:
+      'An AI-powered adaptive learning platform designed specifically for dyslexic students. The system delivers gamified reading and writing exercises with adaptive difficulty, helping learners build confidence through progressive success.',
+    challenge:
+      'Calibrating adaptive difficulty is hard — too easy and students lose interest; too hard and they disengage. Designing accessible, distraction-free UI for learners who struggle with standard reading layouts required deep research into dyslexia-friendly design principles.',
+    approach:
+      'Built with Python on the backend and plain HTML/CSS/JS on the frontend for maximum browser compatibility. The AI module analyses response patterns to adjust exercise difficulty in real time. Dyslexie font and high-contrast themes are used throughout.',
+    outcome:
+      'Prototype tested with a small student cohort at IIIT Delhi. Early results showed increased engagement and measurable improvement in reading speed for 70% of participants. The gamification layer proved critical for sustained use.',
+    mainImageUrl: FOS1,
+    gallery: [FOS1],
+    toolsUsed: ['Python', 'HTML', 'CSS', 'JavaScript', 'AI / ML', 'Dyslexie Font', 'GitHub'],
+    liveUrl: null,
+  },
+  'airport-management-system': {
+    title: 'Airport Management System',
+    category: 'React / Flask / PostgreSQL',
+    year: '2025',
+    overview:
+      'A full-stack airport management system enabling users to book facilities (lounges, shops, gyms) and view real-time flight details. Includes dedicated portals for passengers, staff, managers, and admins.',
+    challenge:
+      'Managing different user roles with varying access levels and syncing real-time flight updates with facility bookings posed integration challenges. Maintaining database integrity across concurrent bookings was critical.',
+    approach:
+      'Designed role-based React interfaces for all user types. The Flask backend handles RESTful routes, and PostgreSQL manages data storage. Iterative testing and feedback shaped the final UX across all portals.',
+    outcome:
+      'A seamless, scalable system demonstrating strong backend-frontend integration. Role-based access ensures secure and efficient service management across the entire airport workflow.',
+    mainImageUrl: AMS1,
+    gallery: [AMS2, AMS3, AMS4],
+    toolsUsed: ['React', 'JavaScript', 'CSS', 'Python', 'Flask', 'PostgreSQL', 'REST APIs', 'GitHub'],
+    liveUrl: null,
+  },
+  'angry-birds': {
+    title: 'Angry Birds Game',
+    category: 'Interactive Game',
+    year: '2024',
+    overview:
+      'A multi-level LibGDX game replicating Angry Birds-style gameplay with unique backgrounds, UI screens for play/pause/settings, level saving/loading, and touch-based controls.',
+    challenge:
+      'Smooth transitions between screens, managing game states (pause/resume), and saving level data dynamically were major hurdles. Maintaining level data integrity across sessions required careful serialisation logic.',
+    approach:
+      'LibGDX project with Gradle. Separate screens for main menu, level selection, and gameplay. Used input adapters for interaction. A JSON-based save/load system and structured level rendering with different assets.',
+    outcome:
+      'A modular, interactive game with clean UI and seamless navigation. The save/load system and level progression enhanced engagement — a strong demonstration of game-dev skills in LibGDX.',
+    mainImageUrl: AB1,
+    gallery: [AB2, AB3, AB4, AB5, AB6, AB7],
+    toolsUsed: ['Java', 'LibGDX', 'Gradle', 'Scene2D UI', 'JSON (save/load)', 'IntelliJ IDEA', 'GitHub'],
+    liveUrl: null,
+  },
+  'food-ordering-system': {
+    title: 'Food Ordering System',
+    category: 'Application',
+    year: '2024',
+    overview:
+      'ByteMe is a Java-based food ordering application with admin and customer roles. Admins manage menus, orders, and refunds; customers log in, browse, and track their order history.',
+    challenge:
+      'Managing complex admin-customer interactions and data consistency across sessions required meticulous design. Implementing secure login and validating edge cases needed robust exception handling.',
+    approach:
+      'Core classes built using OOP principles (inheritance, encapsulation). Java collections for in-memory data, file I/O for persistence, lambda expressions for data processing. JUnit tests validate reliability.',
+    outcome:
+      'A maintainable, modular system with clear role-based structure. JUnit coverage ensures code correctness, and the OOP architecture makes it straightforward to extend.',
+    mainImageUrl: FOS1,
+    gallery: [FOS1],
+    toolsUsed: ['Java', 'OOP', 'HashMap', 'ArrayList', 'File I/O', 'Lambda', 'JUnit 5', 'Maven', 'IntelliJ IDEA'],
+    liveUrl: null,
+  },
+};
+
+const SECTIONS = [
+  { key: 'overview',  label: 'Overview',  num: '01' },
+  { key: 'challenge', label: 'Challenge', num: '02' },
+  { key: 'approach',  label: 'Approach',  num: '03' },
+  { key: 'outcome',   label: 'Outcome',   num: '04' },
+];
 
 const ProjectDetail = () => {
-  const { id } = useParams();
-  const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [currentImage, setCurrentImage] = useState(0);
-  const galleryRef = useRef(null);
-  const { playSound } = useAudio();
-  
-  // Mock project data
-  useEffect(() => {
-    const projectsData = {
-      'airport-management-system': {
-        title: 'Airport Management System',
-        category: 'Full Stack Website',
-        description: 'A full-stack airport management system enabling users to book facilities and view real-time flight details via an interactive interface.',
-        overview: 'This project streamlines airport experience by allowing users to book lounges, shops, gyms, and other services online. It includes dedicated portals for users, staff, managers, and an admin for complete control. Users can also access live flight information including gate and terminal details. Built with React, JavaScript, CSS, PostgreSQL, and Python, the platform ensures efficient facility and flight management.',
-        challenge: 'Managing different user roles with varying access levels and syncing real-time flight updates with facility bookings posed integration challenges. Ensuring smooth communication between the backend and frontend while maintaining database integrity was critical to the system’s performance and reliability.',
-        approach: 'I started by identifying common issues travelers face at airports regarding facility bookings. Then, I designed role-based user interfaces for passengers, staff, and admins. The backend was developed using Python with RESTful routes, and the frontend using React. PostgreSQL handled data storage, and I ensured smooth integration between all components through testing, feedback, and iterative development.',
-        outcome: 'The system offers a seamless experience for passengers and staff alike, simplifying facility bookings and flight tracking. Role-based access ensures secure and efficient management of services. Successfully implemented using a full-stack approach, this project enhanced user experience and demonstrated strong backend-frontend integration, making it a scalable solution for modern airports.',
-        mainImageUrl: AMS1,
-        gallery: [
-          AMS2,
-          AMS3,
-          AMS4
-        ],
-        toolsUsed: ['React', 'JavaScript', 'CSS', 'PostgreSQL', 'Python', 'REST APIs', 'GitHub', 'Node.js (for routing)', 'VS Code'],
-        liveUrl: '#',
-        year: '2025'
-      },
-      'angry-birds': {
-        title: 'Angry Birds Game',
-        category: 'Interactive Game',
-        description: 'A multi-level LibGDX game with interactive UI, level saving/loading, and touch-based controls built using Java and Gradle.',
-        overview: 'This game project replicates the Angry Birds-style gameplay with multiple levels, each featuring unique backgrounds and textures. It includes a functional UI with buttons for play, pause, load, settings, and saving progress. Players can select levels, save progress, and resume gameplay. Designed using LibGDX and Java, it showcases proficiency in game logic, UI design, and input handling.',
-        challenge: 'Implementing smooth transitions between screens, managing game states like pause and resume, and saving/loading levels dynamically were major hurdles. Handling responsive UI for different resolutions and maintaining level data integrity across sessions required thoughtful logic and testing.',
-        approach: 'I began by setting up a LibGDX project with Gradle. Designed separate screens for main menu, level selection, and gameplay. Used input adapters to manage user interaction. Implemented a save/load system and structured level rendering with different assets. Focused on clean code structure, reusable components, and smooth state transitions between screens for an optimal gaming experience.',
-        outcome: 'Successfully built a modular, interactive game with clean UI and seamless navigation across levels. The save/load mechanism and level progression system enhanced user engagement. The project demonstrates strong game development skills, event-driven programming, and UI/UX understanding in a LibGDX environment, making it a valuable addition to my portfolio.',
-        mainImageUrl: AB1,
-        gallery: [
-          AB2,
-          AB3,
-          AB4,
-          AB5,
-          AB6,
-          AB7
-        ],
-        toolsUsed: ['Java', 'LibGDX', 'Gradle', 'IntelliJ IDEA', 'Scene2D UI', 'GitHub', 'JSON(for save/load)'],
-        liveUrl: '#',
-        year: '2024'
-      },
-      'food-ordering-system': {
-        title: 'Food Ordering System',
-        category: 'Application',
-        description: 'A Java-based food ordering system supporting admin and customer roles with robust menu, order, and sales management features.',
-        overview: 'ByteMe is a full-fledged food ordering application that supports both admin and customer functionalities. Admins can manage menus, process orders, handle refunds, and generate reports. Customers can log in, place orders, and track order history. The system applies core Java concepts like OOP, collections, file I/O, and exception handling, and is backed by JUnit tests for reliability.',
-        challenge: 'Managing complex admin-customer interactions and maintaining data consistency across sessions required meticulous design. Implementing secure login, file-based data handling, and testing corner cases such as invalid orders or empty inventories were particularly challenging and needed robust exception handling and logic validation.',
-        approach: 'The project began with defining core user roles and their requirements. Classes were built using OOP principles like inheritance and encapsulation. Java collections managed in-memory data, while file I/O handled persistence. Lambda expressions streamlined data processing. Exception handling was added to improve user experience. JUnit tests validated the system’s reliability under various usage scenarios.',
-        outcome: 'Successfully developed a maintainable and modular food ordering system with a clear role-based structure. Users can easily place and manage orders, while admins efficiently oversee operations. The use of object-oriented principles and Java features made the system scalable and reliable, with JUnit test coverage ensuring code correctness and resilience against edge cases.',
-        mainImageUrl: FOS1,
-        gallery: [
-          FOS1,
-        ],
-        toolsUsed: ['Java', 'OOP', 'HashMap', 'ArrayList', 'File I/O', 'Lambda', 'Streams', 'Exception Handling', 'JUnit 5', 'Maven', 'IntelliJ IDEA'],
-        liveUrl: '#',
-        year: '2024'
-      },
-    };
-    
-    setTimeout(() => {
-      if (projectsData[id]) {
-        setProject(projectsData[id]);
-      }
-      setLoading(false);
-    }, 1000); // Simulate loading delay
-  }, [id]);
-  
-  // Handle gallery navigation
-  const nextImage = () => {
-    if (!project) return;
-    setCurrentImage((prev) => (prev === project.gallery.length - 1 ? 0 : prev + 1));
-    playSound('click');
-    
-    // Haptic feedback
-    if (navigator.vibrate) {
-      navigator.vibrate(15);
-    }
-  };
-  
-  const prevImage = () => {
-    if (!project) return;
-    setCurrentImage((prev) => (prev === 0 ? project.gallery.length - 1 : prev - 1));
-    playSound('click');
-    
-    // Haptic feedback
-    if (navigator.vibrate) {
-      navigator.vibrate(15);
-    }
-  };
-  
-  // Handle touch gestures for gallery
+  const { id }                             = useParams();
+  const [currentImage, setCurrentImage]   = useState(0);
+  const galleryRef                         = useRef(null);
+  const heroRef                            = useRef(null);
+  const { playSound }                      = useAudio();
+
+  const { scrollY } = useScroll();
+  const heroImgY    = useTransform(scrollY, [0, 500], ['0%', '18%']);
+
+  const project = PROJECTS[id];
+
+  // Touch swipe for gallery
   const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-  
-  const handleTouchStart = (e) => {
-    setTouchStart(e.targetTouches[0].clientX);
+  const [touchEnd,   setTouchEnd]   = useState(0);
+
+  const nextImage = () => {
+    setCurrentImage((p) => (p === project.gallery.length - 1 ? 0 : p + 1));
+    playSound('click');
   };
-  
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+
+  const prevImage = () => {
+    setCurrentImage((p) => (p === 0 ? project.gallery.length - 1 : p - 1));
+    playSound('click');
   };
-  
+
   const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 100) {
-      // Swipe left - next image
-      nextImage();
-    }
-    
-    if (touchStart - touchEnd < -100) {
-      // Swipe right - previous image
-      prevImage();
-    }
+    if (touchStart - touchEnd > 100) nextImage();
+    if (touchStart - touchEnd < -100) prevImage();
   };
-  
-  // Project not found
-  if (!loading && !project) {
+
+  if (!project) {
     return (
       <div className="project-not-found">
         <div className="container">
           <h2>Project Not Found</h2>
           <p>The project you're looking for doesn't exist or has been removed.</p>
           <Link to="/projects" className="back-link">
-            <ArrowLeft size={16} />
-            Back to Projects
+            <ArrowLeft size={16} /> Back to Projects
           </Link>
         </div>
-        
         <style jsx>{`
           .project-not-found {
             min-height: 70vh;
@@ -160,7 +168,6 @@ const ProjectDetail = () => {
             justify-content: center;
             text-align: center;
           }
-          
           .back-link {
             display: inline-flex;
             align-items: center;
@@ -169,493 +176,425 @@ const ProjectDetail = () => {
             padding: 10px 20px;
             background-color: var(--card);
             border-radius: var(--radius-full);
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
+            color: var(--text);
           }
-          
           .back-link:hover {
             background-color: var(--color-accent);
-            color: white;
+            color: #fff;
             text-decoration: none;
           }
         `}</style>
       </div>
     );
   }
-  
+
   return (
     <div className="project-detail-page">
-      {loading ? (
-        <div className="loading-state">
-          <div className="loading-spinner"></div>
-          <p>Loading project details...</p>
-        </div>
-      ) : (
-        <div className="container">
-          <Link to="/projects" className="back-link">
-            <ArrowLeft size={16} />
-            Back to Projects
+      <div className="container">
+
+        <motion.div {...fadeUp(0)}>
+          <Link to="/projects" className="back-link" onClick={() => playSound('click')}>
+            <ArrowLeft size={16} /> Back to Projects
           </Link>
-          
-          <header className="project-header">
-            <h1>{project.title}</h1>
-            <div className="project-meta">
-              <span className="project-category">{project.category}</span>
-              <span className="project-year">{project.year}</span>
-            </div>
-          </header>
-          
-          <div className="project-hero">
-            <img 
-              src={project.mainImageUrl} 
-              alt={project.title} 
-              className="main-image"
-              loading="lazy"
-            />
+        </motion.div>
+
+        <motion.header className="project-header" {...fadeUp(0.05)}>
+          <h1>{project.title}</h1>
+          <div className="project-meta">
+            <span className="project-category">{project.category}</span>
+            <span className="project-year">{project.year}</span>
           </div>
-          
-          <div className="project-content">
-            <div className="project-main">
-              <section className="project-section">
-                <h2>Overview</h2>
-                <p>{project.overview}</p>
-              </section>
-              
-              <section className="project-section">
-                <h2>Challenge</h2>
-                <p>{project.challenge}</p>
-              </section>
-              
-              <section className="project-section">
-                <h2>Approach</h2>
-                <p>{project.approach}</p>
-              </section>
-              
-              <section className="project-section">
-                <h2>Outcome</h2>
-                <p>{project.outcome}</p>
-              </section>
-              
-              <section className="project-section project-gallery" ref={galleryRef}>
-                <h2>Project Gallery</h2>
-                
-                <div 
-                  className="gallery-container" 
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
-                >
-                  <button 
-                    className="gallery-nav prev"
-                    onClick={prevImage}
-                    aria-label="Previous image"
-                  >
-                    <ChevronLeft size={24} />
-                  </button>
-                  
-                  <div className="gallery-view">
-                    {project.gallery.map((image, index) => (
-                      <img 
-                        key={index}
-                        src={image}
-                        alt={`${project.title} - Gallery image ${index + 1}`}
-                        className={`gallery-image ${index === currentImage ? 'active' : ''}`}
-                        loading="lazy"
-                      />
-                    ))}
-                    
+        </motion.header>
+
+        {/* layoutId matches ProjectCard — framer-motion morphs the card image into the hero */}
+        <motion.div
+          ref={heroRef}
+          layoutId={`project-image-${id}`}
+          className="project-hero"
+          style={{ borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}
+          transition={{ duration: 0.5, ease: EASE }}
+        >
+          <motion.img
+            src={project.mainImageUrl}
+            alt={project.title}
+            className="main-image"
+            style={{ y: heroImgY, scale: 1.18 }}
+            loading="lazy"
+          />
+        </motion.div>
+
+        <div className="project-content">
+          <div className="project-main">
+            {SECTIONS.map(({ key, label, num }, i) => (
+              <motion.section
+                key={key}
+                className="project-section"
+                {...fadeUp(i * 0.06)}
+              >
+                <p className="section-counter">// {num}</p>
+                <h2>{label}</h2>
+                <p>{project[key]}</p>
+              </motion.section>
+            ))}
+
+            {/* Gallery */}
+            <motion.section
+              className="project-section project-gallery"
+              ref={galleryRef}
+              {...fadeUp(0.25)}
+            >
+              <h2>Project Gallery</h2>
+
+              <div
+                className="gallery-container"
+                onTouchStart={(e) => setTouchStart(e.targetTouches[0].clientX)}
+                onTouchMove={(e) => setTouchEnd(e.targetTouches[0].clientX)}
+                onTouchEnd={handleTouchEnd}
+              >
+                <button className="gallery-nav prev" onClick={prevImage} aria-label="Previous">
+                  <ChevronLeft size={24} />
+                </button>
+
+                <div className="gallery-view">
+                  {project.gallery.map((img, i) => (
+                    <img
+                      key={i}
+                      src={img}
+                      alt={`${project.title} — screenshot ${i + 1}`}
+                      className={`gallery-image ${i === currentImage ? 'active' : ''}`}
+                      loading="lazy"
+                    />
+                  ))}
+                  {project.gallery.length > 1 && (
                     <div className="swipe-indicator">Swipe to navigate</div>
-                  </div>
-                  
-                  <button 
-                    className="gallery-nav next"
-                    onClick={nextImage}
-                    aria-label="Next image"
-                  >
-                    <ChevronRight size={24} />
-                  </button>
+                  )}
                 </div>
-                
-                <div className="gallery-indicators">
-                  {project.gallery.map((_, index) => (
-                    <button 
-                      key={index}
-                      className={`indicator ${index === currentImage ? 'active' : ''}`}
-                      onClick={() => {
-                        setCurrentImage(index);
-                        playSound('pop');
-                      }}
-                      aria-label={`Go to image ${index + 1}`}
-                    ></button>
-                  ))}
-                </div>
-              </section>
-            </div>
-            
-            <div className="project-sidebar">
-              <div className="sidebar-section">
-                <h3>Tools & Technologies</h3>
-                <ul className="tools-list">
-                  {project.toolsUsed.map((tool, index) => (
-                    <li key={index} className="tool-item">{tool}</li>
-                  ))}
-                </ul>
+
+                <button className="gallery-nav next" onClick={nextImage} aria-label="Next">
+                  <ChevronRight size={24} />
+                </button>
               </div>
-              
-              {project.liveUrl && (
-                <div className="sidebar-section">
-                  <h3>Live Project</h3>
-                  <a 
-                    href={project.liveUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="live-link"
-                    onClick={() => playSound('success')}
-                  >
-                    View Live Project
-                    <ExternalLink size={16} />
-                  </a>
+
+              {project.gallery.length > 1 && (
+                <div className="gallery-indicators">
+                  {project.gallery.map((_, i) => (
+                    <button
+                      key={i}
+                      className={`indicator ${i === currentImage ? 'active' : ''}`}
+                      onClick={() => { setCurrentImage(i); playSound('pop'); }}
+                      aria-label={`Image ${i + 1}`}
+                    />
+                  ))}
                 </div>
               )}
-              
-              {/* <div className="sidebar-section qr-section">
-                <h3>View in AR</h3>
-                <div className="qr-code">
-                  <img 
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`https://example.com/ar-view/${id}`)}`} 
-                    alt="QR Code for AR View" 
-                    loading="lazy"
-                  />
-                  <p>Scan to view in augmented reality</p>
-                </div>
-              </div> */}
-            </div>
+            </motion.section>
           </div>
+
+          {/* Sidebar */}
+          <motion.div className="project-sidebar" {...fadeUp(0.1)}>
+            <div className="sidebar-section">
+              <p className="sidebar-eyebrow">// STACK</p>
+              <div className="tools-grid">
+                {project.toolsUsed.map((tool) => (
+                  <span key={tool} className="tool-tag">{tool}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="sidebar-section">
+              <p className="sidebar-eyebrow">// YEAR</p>
+              <p className="sidebar-value">{project.year}</p>
+            </div>
+
+            {project.liveUrl && (
+              <div className="sidebar-section">
+                <p className="sidebar-eyebrow">// LIVE</p>
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="live-link"
+                  onClick={() => playSound('success')}
+                >
+                  View Live <ExternalLink size={14} />
+                </a>
+              </div>
+            )}
+          </motion.div>
         </div>
-      )}
-      
+      </div>
+
       <style jsx>{`
         .project-detail-page {
           padding-top: 60px;
-          padding-bottom: 60px;
+          padding-bottom: 80px;
         }
-        
-        .loading-state {
-          min-height: 70vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .loading-spinner {
-          width: 50px;
-          height: 50px;
-          border: 3px solid rgba(0, 0, 0, 0.1);
-          border-radius: 50%;
-          border-top-color: var(--color-accent);
-          animation: spin 1s ease-in-out infinite;
-          margin-bottom: var(--space-3);
-        }
-        
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        
+
         .back-link {
           display: inline-flex;
           align-items: center;
           gap: 8px;
           margin-bottom: var(--space-4);
-          color: var(--text);
-          font-weight: 500;
-          transition: color 0.3s ease;
+          font-family: var(--font-mono);
+          font-size: 0.72rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.4);
+          transition: color 0.2s ease, gap 0.2s ease;
         }
-        
-        .back-link:hover {
-          color: var(--color-accent);
-          text-decoration: none;
-        }
-        
-        .project-header {
-          margin-bottom: var(--space-4);
-        }
-        
+        .back-link:hover { color: rgba(255,255,255,0.85); gap: 12px; text-decoration: none; }
+
+        .project-header { margin-bottom: var(--space-4); }
+
         .project-meta {
           display: flex;
-          gap: var(--space-3);
+          gap: 8px;
           margin-top: var(--space-2);
+          flex-wrap: wrap;
         }
-        
+
         .project-category {
-          display: inline-block;
-          background-color: rgba(0, 0, 0, 0.05);
-          padding: 5px 10px;
-          border-radius: var(--radius-full);
-          font-size: 0.8rem;
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
-          letter-spacing: 1px;
           color: var(--color-accent);
-          font-weight: 500;
-        }
-        
-        .project-year {
-          display: inline-block;
-          padding: 5px 10px;
+          border: 1px solid rgba(233,69,96,0.3);
+          background: rgba(233,69,96,0.06);
+          padding: 4px 12px;
           border-radius: var(--radius-full);
-          font-size: 0.8rem;
-          color: var(--color-muted);
         }
-        
+
+        .project-year {
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          letter-spacing: 0.1em;
+          color: rgba(255,255,255,0.3);
+          border: 1px solid rgba(255,255,255,0.08);
+          padding: 4px 12px;
+          border-radius: var(--radius-full);
+        }
+
         .project-hero {
           margin-bottom: var(--space-4);
-          border-radius: var(--radius-lg);
-          overflow: hidden;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 24px 48px rgba(0,0,0,0.35);
         }
-        
+
         .main-image {
           width: 100%;
           height: auto;
           display: block;
         }
-        
+
         .project-content {
           display: grid;
           grid-template-columns: 2fr 1fr;
           gap: var(--space-4);
         }
-        
-        .project-section {
-          margin-bottom: var(--space-4);
+
+        .project-section { margin-bottom: var(--space-4); }
+
+        .section-counter {
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--color-accent);
+          opacity: 0.75;
+          margin-bottom: 8px;
         }
-        
+
         .project-section h2 {
+          font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+          font-weight: 800;
+          letter-spacing: -0.03em;
           margin-bottom: var(--space-3);
-          position: relative;
-          display: inline-block;
         }
-        
-        .project-section h2::after {
-          content: '';
-          position: absolute;
-          bottom: -5px;
-          left: 0;
-          width: 40px;
-          height: 2px;
-          background-color: var(--color-accent);
+
+        .project-section p {
+          font-size: 0.95rem;
+          color: rgba(255,255,255,0.6);
+          line-height: 1.75;
         }
-        
-        .project-gallery {
-          margin-top: var(--space-5);
-        }
-        
+
+        .project-gallery { margin-top: var(--space-5); }
+
         .gallery-container {
           position: relative;
           margin-top: var(--space-3);
           border-radius: var(--radius-lg);
           overflow: hidden;
-          background-color: var(--card);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          background: rgba(255,255,255,0.025);
+          border: 1px solid rgba(255,255,255,0.07);
         }
-        
+
         .gallery-view {
           height: 400px;
           position: relative;
           overflow: hidden;
         }
-        
+
         .gallery-image {
           position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
           object-fit: cover;
           opacity: 0;
           transition: opacity 0.5s ease;
         }
-        
-        .gallery-image.active {
-          opacity: 1;
-        }
-        
+
+        .gallery-image.active { opacity: 1; }
+
         .gallery-nav {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          background-color: rgba(255, 255, 255, 0.7);
-          color: var(--color-primary);
-          width: 40px;
-          height: 40px;
+          background: rgba(0,0,0,0.55);
+          border: 1px solid rgba(255,255,255,0.12);
+          color: rgba(255,255,255,0.8);
+          width: 38px; height: 38px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          border: none;
           cursor: pointer;
           z-index: 10;
-          transition: all 0.3s ease;
+          transition: background 0.2s ease, border-color 0.2s ease, transform 0.25s ease;
+          backdrop-filter: blur(8px);
         }
-        
         .gallery-nav:hover {
-          background-color: white;
-          transform: translateY(-50%) scale(1.1);
+          background: rgba(233,69,96,0.4);
+          border-color: rgba(233,69,96,0.5);
+          transform: translateY(-50%) scale(1.08);
         }
-        
-        .gallery-nav.prev {
-          left: 20px;
-        }
-        
-        .gallery-nav.next {
-          right: 20px;
-        }
-        
+        .gallery-nav.prev { left: 14px; }
+        .gallery-nav.next { right: 14px; }
+
         .gallery-indicators {
           display: flex;
           justify-content: center;
           gap: 10px;
           margin-top: var(--space-3);
         }
-        
+
         .indicator {
-          width: 10px;
-          height: 10px;
+          width: 6px; height: 6px;
           border-radius: 50%;
-          background-color: rgba(0, 0, 0, 0.1);
+          background: rgba(255,255,255,0.2);
           border: none;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: background 0.25s ease, transform 0.25s ease;
         }
-        
         .indicator.active {
-          background-color: var(--color-accent);
-          transform: scale(1.3);
+          background: var(--color-accent);
+          transform: scale(1.5);
         }
-        
+
         .swipe-indicator {
           position: absolute;
-          bottom: 20px;
+          bottom: 16px;
           left: 50%;
           transform: translateX(-50%);
-          background-color: rgba(0, 0, 0, 0.5);
-          color: white;
-          padding: 8px 15px;
+          background-color: rgba(0,0,0,0.45);
+          color: #fff;
+          padding: 7px 14px;
           border-radius: var(--radius-full);
-          font-size: 0.8rem;
-          opacity: 0.7;
+          font-size: 0.78rem;
+          pointer-events: none;
           z-index: 10;
         }
-        
+
         .project-sidebar {
           position: sticky;
           top: 100px;
           align-self: start;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
         }
-        
+
         .sidebar-section {
-          background-color: var(--card);
-          border-radius: var(--radius-md);
+          background: rgba(255,255,255,0.025);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: var(--radius-lg);
           padding: var(--space-3);
-          margin-bottom: var(--space-3);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+          transition: border-color 0.25s ease;
         }
-        
-        .sidebar-section h3 {
-          margin-bottom: var(--space-2);
-          font-size: 1.1rem;
+        .sidebar-section:hover { border-color: rgba(255,255,255,0.12); }
+
+        .sidebar-eyebrow {
+          font-family: var(--font-mono);
+          font-size: 0.6rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--color-accent);
+          opacity: 0.7;
+          margin-bottom: 12px;
         }
-        
-        .tools-list {
-          list-style: none;
-          padding: 0;
+
+        .sidebar-value {
+          font-family: var(--font-mono);
+          font-size: 0.9rem;
+          color: rgba(255,255,255,0.6);
           margin: 0;
         }
-        
-        .tool-item {
-          display: inline-block;
-          margin-right: 10px;
-          margin-bottom: 10px;
-          padding: 5px 10px;
-          background-color: rgba(0, 0, 0, 0.05);
-          border-radius: var(--radius-sm);
-          font-size: 0.9rem;
-          transition: all 0.3s ease;
-        }
-        
-        .tool-item:hover {
-          background-color: rgba(0, 0, 0, 0.1);
-          transform: translateY(-2px);
-        }
-        
-        .live-link {
+
+        .tools-grid {
           display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+
+        .tool-tag {
+          font-family: var(--font-mono);
+          font-size: 0.62rem;
+          letter-spacing: 0.05em;
+          color: rgba(255,255,255,0.5);
+          border: 1px solid rgba(255,255,255,0.1);
+          padding: 3px 10px;
+          border-radius: var(--radius-full);
+          transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+          cursor: default;
+        }
+        .tool-tag:hover {
+          color: var(--color-accent);
+          border-color: rgba(233,69,96,0.3);
+          background: rgba(233,69,96,0.06);
+        }
+
+        .live-link {
+          display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 10px 15px;
-          background-color: var(--color-accent);
-          color: white;
-          border-radius: var(--radius-md);
-          font-weight: 500;
-          transition: all 0.3s ease;
+          padding: 9px 18px;
+          background: var(--color-accent);
+          color: #fff;
+          border-radius: var(--radius-full);
+          font-size: 0.82rem;
+          font-weight: 600;
+          letter-spacing: 0.01em;
+          text-decoration: none;
+          transition: background 0.22s ease, transform 0.22s ease;
         }
-        
         .live-link:hover {
-          background-color: #d13652;
+          background: #d13652;
           transform: translateY(-2px);
           text-decoration: none;
+          color: #fff;
         }
-        
-        .qr-section {
-          text-align: center;
-        }
-        
-        .qr-code img {
-          max-width: 150px;
-          height: auto;
-          margin-bottom: var(--space-2);
-        }
-        
-        .qr-code p {
-          font-size: 0.9rem;
-          color: var(--color-muted);
-        }
-        
+
         @media (max-width: 992px) {
-          .project-content {
-            grid-template-columns: 1fr;
-          }
-          
-          .project-sidebar {
-            position: static;
-            margin-top: var(--space-4);
-          }
-          
-          .sidebar-section {
-            margin-bottom: var(--space-3);
-          }
-          
-          .gallery-view {
-            height: 300px;
-          }
+          .project-content { grid-template-columns: 1fr; }
+          .project-sidebar { position: static; margin-top: var(--space-4); }
+          .gallery-view { height: 300px; }
         }
-        
+
         @media (max-width: 768px) {
-          .gallery-nav {
-            width: 30px;
-            height: 30px;
-          }
-          
-          .gallery-nav.prev {
-            left: 10px;
-          }
-          
-          .gallery-nav.next {
-            right: 10px;
-          }
-          
-          .gallery-view {
-            height: 250px;
-          }
+          .gallery-nav { width: 32px; height: 32px; }
+          .gallery-nav.prev { left: 10px; }
+          .gallery-nav.next { right: 10px; }
+          .gallery-view { height: 240px; }
         }
       `}</style>
     </div>

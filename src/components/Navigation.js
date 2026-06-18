@@ -1,261 +1,279 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { useAudio } from '../context/AudioContext';
 
+const LINKS = [
+  { name: 'Home',     path: '/' },
+  { name: 'About',    path: '/about' },
+  { name: 'Projects', path: '/projects' },
+  { name: 'Contact',  path: '/contact' },
+];
+
+const EASE = [0.22, 1, 0.36, 1];
+
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
-  // const { theme } = useTheme();
-  const { playSound } = useAudio();
-  const { theme, toggleTheme } = useTheme(); // Now using toggleTheme
+  const location              = useLocation();
+  const { theme, toggleTheme } = useTheme();
+  const { playSound }          = useAudio();
 
-  const links = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'Contact', path: '/contact' }
-  ];
-  const handleThemeToggle = () => {
-    toggleTheme();
-    playSound('click');
-    if (navigator.vibrate) navigator.vibrate(15);
-  };
+  // Close any lingering state on route change (no-op kept for future use)
+  useEffect(() => {}, [location]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+  const handleLink  = () => { playSound('click');  if (navigator.vibrate) navigator.vibrate(15); };
+  const handleTheme = () => { toggleTheme(); playSound('click'); if (navigator.vibrate) navigator.vibrate(15); };
+  const handleHover = () => playSound('hover');
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
-
-  const handleLinkClick = () => {
-    playSound('click');
-    // Trigger haptic feedback if available
-    if (navigator.vibrate) {
-      navigator.vibrate(15);
-    }
-  };
+  // /projects also highlights when viewing /projects/:id
+  const isActive = (path) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   return (
-    <nav className={`navigation ${scrolled ? 'scrolled' : ''} ${theme}`}>
-      <div className="nav-container">
-        <Link to="/" className="logo" onClick={handleLinkClick}>
-          <span className="logo-text">Unique's Portfolio</span>
-        </Link>
-      {/* Add this hamburger menu button */}
-      <button 
-        className="menu-toggle" 
-        onClick={() => {
-          setIsOpen(!isOpen);
-          playSound('swoosh');
-          if (navigator.vibrate) navigator.vibrate(20);
-        }}
-        aria-label={isOpen ? "Close menu" : "Open menu"}
+    <>
+      {/* ── Desktop floating pill ─────────────────────────────────────────────── */}
+      <motion.nav
+        className="nav-pill"
+        // x: '-50%' keeps centering as a framer-motion value so y-animation
+        // composes correctly (CSS transform would be overridden by framer)
+        style={{ x: '-50%' }}
+        initial={{ y: -32, opacity: 0 }}
+        animate={{ y: 0,   opacity: 1 }}
+        transition={{ delay: 0.15, duration: 0.65, ease: EASE }}
+        aria-label="Main navigation"
       >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-        <div className={`nav-links ${isOpen ? 'open' : ''}`}>
-          {links.map((link, index) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
-              onClick={handleLinkClick}
-              style={{ animationDelay: `${index * 0.1}s` }}
+        {/* Logo mark */}
+        <Link to="/" className="nav-logo" onClick={handleLink} onMouseEnter={handleHover} aria-label="Home">
+          U<span className="nav-logo-dot">.</span>
+        </Link>
+
+        {/* Nav links */}
+        <ul className="nav-links" role="list">
+          {LINKS.map(({ name, path }) => {
+            const active = isActive(path);
+            return (
+              <li key={path}>
+                <Link
+                  to={path}
+                  className={`nav-link${active ? ' active' : ''}`}
+                  onClick={handleLink}
+                  onMouseEnter={handleHover}
+                >
+                  {name}
+                  {active && (
+                    <motion.span
+                      className="nav-dot"
+                      layoutId="nav-dot"
+                      transition={{ duration: 0.32, ease: EASE }}
+                    />
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        {/* Theme toggle */}
+        <motion.button
+          className="nav-theme"
+          onClick={handleTheme}
+          onMouseEnter={handleHover}
+          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          whileTap={{ scale: 0.85 }}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={theme}
+              initial={{ opacity: 0, rotate: -45, scale: 0.7 }}
+              animate={{ opacity: 1, rotate: 0,   scale: 1   }}
+              exit={{    opacity: 0, rotate:  45, scale: 0.7 }}
+              transition={{ duration: 0.22, ease: EASE }}
+              style={{ display: 'flex' }}
             >
-              {link.name}
+              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            </motion.span>
+          </AnimatePresence>
+        </motion.button>
+      </motion.nav>
+
+      {/* ── Mobile bottom tab bar ─────────────────────────────────────────────── */}
+      <nav className="nav-mobile" aria-label="Mobile navigation">
+        {LINKS.map(({ name, path }) => {
+          const active = isActive(path);
+          return (
+            <Link
+              key={path}
+              to={path}
+              className={`nav-mobile-link${active ? ' active' : ''}`}
+              onClick={handleLink}
+              onMouseEnter={handleHover}
+            >
+              {name}
+              {active && (
+                <motion.span
+                  className="nav-dot"
+                  layoutId="nav-dot-mobile"
+                  transition={{ duration: 0.32, ease: EASE }}
+                />
+              )}
             </Link>
-          ))}
-          
-          {/* Add theme toggle button */}
-          <button 
-            className="theme-toggle"
-            onClick={handleThemeToggle}
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          >
-            {theme === 'dark' ? (
-              <Sun size={20} className="theme-icon" />
-            ) : (
-              <Moon size={20} className="theme-icon" />
-            )}
-          </button>
-        </div>
-      </div>
+          );
+        })}
+
+        <motion.button
+          className="nav-theme nav-mobile-theme"
+          onClick={handleTheme}
+          aria-label="Toggle theme"
+          whileTap={{ scale: 0.85 }}
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+        </motion.button>
+      </nav>
 
       <style jsx>{`
-        .navigation {
+        /* ── Floating pill ───────────────────────────────────────────────────── */
+        .nav-pill {
           position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
+          top: 20px;
+          left: 50%;
           z-index: var(--z-navigation);
-          padding: var(--space-3);
-          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 0;
+          background: rgba(10, 10, 16, 0.85);
           backdrop-filter: blur(5px);
           -webkit-backdrop-filter: blur(5px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: var(--radius-full);
+          padding: 6px 8px 6px 6px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255,255,255,0.04) inset;
         }
-        
-        .navigation.scrolled {
-          background-color: ${theme === 'dark' ? 'rgba(12, 12, 14, 0.8)' : 'rgba(245, 245, 247, 0.8)'};
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .nav-container {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          max-width: 1200px;
-          margin: 0 auto;
-        }
-        
-        .logo {
-          display: flex;
-          align-items: center;
-          font-family: var(--font-heading);
-          font-size: 1.5rem;
-          color: var(--text);
+
+        /* Monogram logo */
+        .nav-logo {
+          font-family: var(--font-mono);
+          font-size: 0.95rem;
+          font-weight: 500;
+          color: var(--color-accent);
           text-decoration: none;
-          font-weight: 700;
+          padding: 4px 14px 4px 8px;
+          letter-spacing: -0.02em;
+          border-right: 1px solid rgba(255, 255, 255, 0.07);
+          margin-right: 6px;
+          line-height: 1;
         }
-        
-        .logo-text {
-          margin-left: var(--space-1);
+        .nav-logo:hover { color: var(--color-accent); opacity: 0.85; }
+
+        .nav-logo-dot {
+          color: rgba(255,255,255,0.35);
         }
-        
+
+        /* Link list */
         .nav-links {
           display: flex;
-          gap: var(--space-4);
+          align-items: center;
+          gap: 2px;
+          list-style: none;
+          margin: 0;
+          padding: 0;
         }
-        
+
         .nav-link {
-          color: var(--text);
-          text-decoration: none;
           position: relative;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+          padding: 6px 14px;
+          font-size: 0.84rem;
           font-weight: 500;
-          opacity: 0.7;
-          transition: opacity 0.3s ease;
-        }
-        
-        .nav-link:hover {
-          opacity: 1;
+          color: rgba(255,255,255,0.45);
           text-decoration: none;
+          border-radius: var(--radius-full);
+          transition: color 0.2s ease;
+          letter-spacing: 0.01em;
+          white-space: nowrap;
         }
-        
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -5px;
-          left: 0;
-          width: 100%;
-          height: 2px;
-          background-color: var(--color-accent);
-          transform: scaleX(0);
-          transform-origin: right;
-          transition: transform 0.3s ease;
+        .nav-link:hover  { color: rgba(255,255,255,0.85); }
+        .nav-link.active { color: #fff; }
+
+        /* Sliding dot under active link */
+        .nav-dot {
+          display: block;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: var(--color-accent);
+          box-shadow: 0 0 6px var(--color-accent);
+          flex-shrink: 0;
         }
-        
-        .nav-link:hover::after,
-        .nav-link.active::after {
-          transform: scaleX(1);
-          transform-origin: left;
-        }
-        
-        .nav-link.active {
-          opacity: 1;
-        }
-        
-        .menu-toggle {
-          display: none;
-          background: transparent;
-          color: var(--text);
-          border: none;
-          cursor: pointer;
-          z-index: 999;
-        }
-        
-        @media (max-width: 768px) {
-          .menu-toggle {
-            display: block;
-          }
-          
-          .nav-links {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 70%;
-            height: 100vh;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--card);
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-            gap: var(--space-4);
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-          }
-          
-          .nav-links.open {
-            transform: translateX(0);
-          }
-          
-          .nav-link {
-            font-size: 1.5rem;
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          
-          .nav-links.open .nav-link {
-            opacity: 0.7;
-            transform: translateY(0);
-            animation: slideInUp 0.5s forwards;
-          }
-        }
-           .theme-toggle {
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          padding: var(--space-2);
-          margin-left: var(--space-4);
+
+        /* Theme icon button */
+        .nav-theme {
           display: flex;
           align-items: center;
           justify-content: center;
-          color: var(--text);
-          transition: transform 0.3s ease;
-          position: relative;
-          top: -5px;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          color: rgba(255,255,255,0.45);
+          cursor: pointer;
+          margin-left: 8px;
+          flex-shrink: 0;
+          transition: color 0.2s ease, border-color 0.2s ease;
         }
-        
-        .theme-toggle:hover {
-          transform: scale(1.1);
+        .nav-theme:hover {
+          color: rgba(255,255,255,0.85);
+          border-color: rgba(255, 255, 255, 0.18);
         }
-        
-        .theme-icon {
-          transition: all 0.3s ease;
-        }
-        
-        @media (max-width: 768px) {
-          .theme-toggle {
-            margin-top: var(--space-4);
-            margin-left: 0;
-            padding: var(--space-3);
+
+        /* ── Mobile bottom bar ──────────────────────────────────────────────── */
+        .nav-mobile { display: none; }
+
+        @media (max-width: 640px) {
+          .nav-pill   { display: none; }
+
+          .nav-mobile {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: var(--z-navigation);
+            background: rgba(10, 10, 16, 0.94);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 10px 4px;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+            justify-content: space-around;
+            align-items: center;
           }
-          
-          .theme-icon {
-            width: 24px;
-            height: 24px;
+
+          .nav-mobile-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            transition: color 0.2s ease;
+          }
+          .nav-mobile-link.active { color: #fff; }
+          .nav-mobile-link:hover  { color: rgba(255,255,255,0.8); }
+
+          .nav-mobile-theme {
+            margin-left: 0;
+            border: 1px solid rgba(255,255,255,0.07);
           }
         }
       `}</style>
-    </nav>
+    </>
   );
 };
 
