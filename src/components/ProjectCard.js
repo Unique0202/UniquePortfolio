@@ -1,6 +1,5 @@
 import React, { useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAudio } from '../context/AudioContext';
 

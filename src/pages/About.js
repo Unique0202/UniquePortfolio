@@ -98,7 +98,7 @@ const About = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            <p className="about-eyebrow">// 00 ABOUT</p>
+            <p className="about-eyebrow">{"// 00 ABOUT"}</p>
             <h1 className="about-title">About Me</h1>
             <p className="about-lead">
               Hey! I'm Unique — a B.Tech CS&amp;Design student at IIIT-Delhi
@@ -134,7 +134,7 @@ const About = () => {
         {/* ── Philosophy ───────────────────────────────────────────────────── */}
         <section className="about-section">
           <div className="section-head">
-            <motion.p className="eyebrow" {...fadeUp(0)}>// 01 PHILOSOPHY</motion.p>
+            <motion.p className="eyebrow" {...fadeUp(0)}>{"// 01 PHILOSOPHY"}</motion.p>
             <motion.h2 {...fadeUp(0.05)}>How I Think</motion.h2>
           </div>
 
@@ -160,7 +160,7 @@ const About = () => {
         {/* ── Skills ───────────────────────────────────────────────────────── */}
         <section className="about-section" ref={skillsRef}>
           <div className="section-head">
-            <motion.p className="eyebrow" {...fadeUp(0)}>// 02 EXPERTISE</motion.p>
+            <motion.p className="eyebrow" {...fadeUp(0)}>{"// 02 EXPERTISE"}</motion.p>
             <motion.h2 {...fadeUp(0.05)}>Skills</motion.h2>
           </div>
 
@@ -187,7 +187,7 @@ const About = () => {
         {/* ── Awards ───────────────────────────────────────────────────────── */}
         <section className="about-section">
           <div className="section-head">
-            <motion.p className="eyebrow" {...fadeUp(0)}>// 03 RECOGNITION</motion.p>
+            <motion.p className="eyebrow" {...fadeUp(0)}>{"// 03 RECOGNITION"}</motion.p>
             <motion.h2 {...fadeUp(0.05)}>Awards</motion.h2>
           </div>
 
@@ -214,7 +214,7 @@ const About = () => {
         {/* ── Journey ──────────────────────────────────────────────────────── */}
         <section className="about-section">
           <div className="section-head">
-            <motion.p className="eyebrow" {...fadeUp(0)}>// 04 JOURNEY</motion.p>
+            <motion.p className="eyebrow" {...fadeUp(0)}>{"// 04 JOURNEY"}</motion.p>
             <motion.h2 {...fadeUp(0.05)}>My Journey</motion.h2>
           </div>
 

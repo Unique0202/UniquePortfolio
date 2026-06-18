@@ -49,7 +49,7 @@ const Navigation = () => {
         </Link>
 
         {/* Nav links */}
-        <ul className="nav-links" role="list">
+        <ul className="nav-links">
           {LINKS.map(({ name, path }) => {
             const active = isActive(path);
             return (

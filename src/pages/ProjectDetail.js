@@ -232,7 +232,7 @@ const ProjectDetail = () => {
                 className="project-section"
                 {...fadeUp(i * 0.06)}
               >
-                <p className="section-counter">// {num}</p>
+                <p className="section-counter">{"// "}{num}</p>
                 <h2>{label}</h2>
                 <p>{project[key]}</p>
               </motion.section>
@@ -294,7 +294,7 @@ const ProjectDetail = () => {
           {/* Sidebar */}
           <motion.div className="project-sidebar" {...fadeUp(0.1)}>
             <div className="sidebar-section">
-              <p className="sidebar-eyebrow">// STACK</p>
+              <p className="sidebar-eyebrow">{"// STACK"}</p>
               <div className="tools-grid">
                 {project.toolsUsed.map((tool) => (
                   <span key={tool} className="tool-tag">{tool}</span>
@@ -303,13 +303,13 @@ const ProjectDetail = () => {
             </div>
 
             <div className="sidebar-section">
-              <p className="sidebar-eyebrow">// YEAR</p>
+              <p className="sidebar-eyebrow">{"// YEAR"}</p>
               <p className="sidebar-value">{project.year}</p>
             </div>
 
             {project.liveUrl && (
               <div className="sidebar-section">
-                <p className="sidebar-eyebrow">// LIVE</p>
+                <p className="sidebar-eyebrow">{"// LIVE"}</p>
                 <a
                   href={project.liveUrl}
                   target="_blank"

@@ -110,7 +110,7 @@ const Contact = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: EASE }}
         >
-          <p className="contact-eyebrow">// 05 CONTACT</p>
+          <p className="contact-eyebrow">{"// 05 CONTACT"}</p>
           <h1 className="contact-title">Let's Talk.</h1>
           <p className="contact-lead">
             Interested in working together, have a question, or just want
@@ -128,7 +128,7 @@ const Contact = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
           >
-            <p className="panel-eyebrow">// SEND A MESSAGE</p>
+            <p className="panel-eyebrow">{"// SEND A MESSAGE"}</p>
 
             <AnimatePresence mode="wait">
               {status === 'sent' ? (
@@ -195,7 +195,7 @@ const Contact = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
           >
-            <p className="panel-eyebrow">// REACH ME</p>
+            <p className="panel-eyebrow">{"// REACH ME"}</p>
 
             <div className="info-items">
               {INFO.map(item => (
@@ -210,7 +210,7 @@ const Contact = () => {
             </div>
 
             <div className="social-section">
-              <p className="panel-eyebrow" style={{ marginBottom: '14px' }}>// ELSEWHERE</p>
+              <p className="panel-eyebrow" style={{ marginBottom: '14px' }}>{"// ELSEWHERE"}</p>
               <div className="social-links">
                 {SOCIALS.map(s => (
                   <a

@@ -89,7 +89,6 @@ const Home = () => {
 
   const containerRef      = useRef(null);
   const sectionRefs       = useRef([]);
-  const currentSectionRef = useRef(0);
   const { playSound }     = useAudio();
 
   // Typewriter loop
@@ -276,7 +275,7 @@ const Home = () => {
             viewport={vp(0.5)}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            // 02 SELECTED WORK
+            {"// 02 SELECTED WORK"}
           </motion.p>
 
           <div className="bento-grid">
@@ -340,7 +339,7 @@ const Home = () => {
             viewport={vp(0.4)}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            // 03 AT A GLANCE
+            {"// 03 AT A GLANCE"}
           </motion.p>
 
           {/* Achievement callout */}
@@ -383,7 +382,7 @@ const Home = () => {
             viewport={vp(0.2)}
             transition={{ duration: 0.4, delay: 0.1, ease: EASE }}
           >
-            <p className="skills-eyebrow">// Tech Stack</p>
+            <p className="skills-eyebrow">{"// Tech Stack"}</p>
             <div className="skills-grid">
               {SKILLS.map((skill, i) => (
                 <motion.span

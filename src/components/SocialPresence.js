@@ -124,7 +124,7 @@ const SocialPresence = () => {
           >
             {/* Header */}
             <div className="gb-header">
-              <p className="gb-eyebrow">// GUESTBOOK</p>
+              <p className="gb-eyebrow">{"// GUESTBOOK"}</p>
               <button className="gb-close" onClick={() => setOpen(false)} aria-label="Close">
                 <X size={15} />
               </button>
@@ -191,7 +191,7 @@ const SocialPresence = () => {
                 {/* Notes list */}
                 {notes.length > 0 && (
                   <div className="gb-notes">
-                    <p className="gb-notes-label">// {notes.length} note{notes.length !== 1 ? 's' : ''}</p>
+                    <p className="gb-notes-label">{"// "}{notes.length}{" note"}{notes.length !== 1 ? 's' : ''}</p>
                     {notes.map((n) => (
                       <div key={n.id} className="gb-note">
                         <div className="gb-note-meta">
