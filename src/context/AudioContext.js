@@ -161,10 +161,12 @@ const buildAmbient = (ac) => {
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
 export const AudioProvider = ({ children }) => {
-  const [isMuted,   setIsMuted]   = useState(() => localStorage.getItem('portfolioMuted') === 'true');
-  const [isAmbient, setIsAmbient] = useState(false);
-  const acRef      = useRef(null);
-  const ambientRef = useRef(null);
+  const [isMuted,    setIsMuted]    = useState(() => localStorage.getItem('portfolioMuted') === 'true');
+  const [isAmbient,  setIsAmbient]  = useState(false);
+  const [isPlaying,  setIsPlaying]  = useState(false);
+  const acRef        = useRef(null);
+  const ambientRef   = useRef(null);
+  const playTimerRef = useRef(null);
 
   // Pre-warm the AudioContext on first user gesture so it's always running
   // before the first playSound call arrives.
@@ -225,17 +227,23 @@ export const AudioProvider = ({ children }) => {
   // Cleanup
   useEffect(() => () => stopAmbient(), [stopAmbient]);
 
+  const triggerPlaying = useCallback(() => {
+    setIsPlaying(true);
+    clearTimeout(playTimerRef.current);
+    playTimerRef.current = setTimeout(() => setIsPlaying(false), 700);
+  }, []);
+
   const playSound = useCallback((name) => {
     if (isMuted) return;
     const fn = SYNTHS[name];
     if (!fn) return;
-    try { fn(getAC()); } catch { /**/ }
-  }, [isMuted, getAC]);
+    try { fn(getAC()); triggerPlaying(); } catch { /**/ }
+  }, [isMuted, getAC, triggerPlaying]);
 
   const playKey = useCallback((type) => {
     if (isMuted) return;
-    try { synthKey(getAC(), type); } catch { /**/ }
-  }, [isMuted, getAC]);
+    try { synthKey(getAC(), type); triggerPlaying(); } catch { /**/ }
+  }, [isMuted, getAC, triggerPlaying]);
 
   const toggleMute = () =>
     setIsMuted(v => {
@@ -244,7 +252,7 @@ export const AudioProvider = ({ children }) => {
     });
 
   return (
-    <Ctx.Provider value={{ isMuted, toggleMute, isAmbient, toggleAmbient, playSound, playKey }}>
+    <Ctx.Provider value={{ isMuted, toggleMute, isAmbient, toggleAmbient, isPlaying, playSound, playKey }}>
       {children}
     </Ctx.Provider>
   );

@@ -226,7 +226,7 @@ const SocialPresence = () => {
           display: flex;
           align-items: center;
           gap: 7px;
-          background: rgba(13,13,18,0.85);
+          background: rgba(13,13,18,0.55);
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: var(--radius-full);
           padding: 8px 14px;
@@ -235,8 +235,8 @@ const SocialPresence = () => {
           letter-spacing: 0.04em;
           color: rgba(255,255,255,0.6);
           cursor: pointer;
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(5px);
+          -webkit-backdrop-filter: blur(5px);
           transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
         }
         .gb-pill:hover {
@@ -265,8 +265,8 @@ const SocialPresence = () => {
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: var(--radius-lg);
           padding: 16px;
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
+          backdrop-filter: blur(5px);
+          -webkit-backdrop-filter: blur(5px);
           box-shadow: 0 16px 48px rgba(0,0,0,0.5);
           max-height: 500px;
           overflow-y: auto;

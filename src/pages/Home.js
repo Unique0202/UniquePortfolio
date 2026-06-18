@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, Github, Linkedin, Mail } from 'lucide-react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useAudio } from '../context/AudioContext';
+import MagneticButton from '../components/MagneticButton';
 import AMS1 from '../assets/ams1.jpg';
 import AB1  from '../assets/ab1.jpg';
 import FOS1 from '../assets/fos1.jpg';
@@ -252,12 +253,16 @@ const Home = () => {
               overlap between beautiful and functional.
             </p>
             <div className="intro-actions">
-              <Link to="/projects" className="cta-btn primary" onMouseEnter={() => playSound('hover')} onClick={() => playSound('click')}>
-                View Work <ArrowUpRight size={15} />
-              </Link>
-              <a href="/Unique_wg_Resume.pdf" download className="cta-btn secondary" onMouseEnter={() => playSound('hover')} onClick={() => playSound('click')}>
-                Resume ↓
-              </a>
+              <MagneticButton strength={0.32}>
+                <Link to="/projects" className="cta-btn primary" onMouseEnter={() => playSound('hover')} onClick={() => playSound('click')}>
+                  View Work <ArrowUpRight size={15} />
+                </Link>
+              </MagneticButton>
+              <MagneticButton strength={0.32}>
+                <a href="/Unique_wg_Resume.pdf" download className="cta-btn secondary" onMouseEnter={() => playSound('hover')} onClick={() => playSound('click')}>
+                  Resume ↓
+                </a>
+              </MagneticButton>
             </div>
           </motion.div>
 
@@ -431,6 +436,7 @@ const Home = () => {
 
         /* Hero is full 100vh — content pushed below the nav pill */
         .hero-section {
+          position: relative;
           min-height: 100vh;
           display: flex;
           flex-direction: column;
@@ -458,6 +464,7 @@ const Home = () => {
         /* ── Hero ───────────────────────────────────────────────────────── */
         .status-badge {
           position: absolute;
+          z-index: 1;
           top: var(--space-3);
           right: var(--space-4);
           display: flex;
@@ -489,7 +496,7 @@ const Home = () => {
           50%       { opacity: 0.35; }
         }
 
-        .hero-body { padding-top: var(--space-2); }
+        .hero-body { position: relative; z-index: 1; padding-top: var(--space-2); }
 
         .hero-label {
           font-family: var(--font-mono);
@@ -558,6 +565,7 @@ const Home = () => {
 
         .scroll-cue {
           position: absolute;
+          z-index: 1;
           bottom: var(--space-5);
           left: var(--space-4);
           background: none;
@@ -580,7 +588,11 @@ const Home = () => {
           left: 0;
           right: 0;
           overflow: hidden;
-          border-top: 1px solid rgba(255,255,255,0.06);
+          border-top: 1px solid rgba(255,255,255,0.07);
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          background: rgba(255,255,255,0.018);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
           padding: 10px 0;
         }
         .marquee-track {

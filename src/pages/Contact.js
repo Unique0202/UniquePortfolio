@@ -3,6 +3,7 @@ import { Send, MapPin, Mail, Github, Linkedin, Instagram } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAudio } from '../context/AudioContext';
+import MagneticButton from '../components/MagneticButton';
 
 const EASE = [0.22, 1, 0.36, 1];
 
@@ -171,6 +172,7 @@ const Contact = () => {
                   <FloatingField   id="subject" name="subject" label="Subject"        value={formData.subject} onChange={handleChange} required                        onKeyDown={handleKeyDown} />
                   <FloatingField   id="message" name="message" label="Your Message"   value={formData.message} onChange={handleChange} required as="textarea" rows={5} onKeyDown={handleKeyDown} />
 
+                  <MagneticButton strength={0.28} style={{ alignSelf: 'flex-start' }}>
                   <button
                     type="submit"
                     className={`submit-btn ${status === 'sending' ? 'sending' : ''}`}
@@ -183,6 +185,7 @@ const Contact = () => {
                       <>Send Message <Send size={15} /></>
                     )}
                   </button>
+                  </MagneticButton>
                 </motion.form>
               )}
             </AnimatePresence>
@@ -213,19 +216,20 @@ const Contact = () => {
               <p className="panel-eyebrow" style={{ marginBottom: '14px' }}>{"// ELSEWHERE"}</p>
               <div className="social-links">
                 {SOCIALS.map(s => (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-pill"
-                    onMouseEnter={() => playSound('hover')}
-                    onClick={() => playSound('click')}
-                    aria-label={s.label}
-                  >
-                    {s.icon}
-                    {s.label}
-                  </a>
+                  <MagneticButton key={s.label} strength={0.3}>
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-pill"
+                      onMouseEnter={() => playSound('hover')}
+                      onClick={() => playSound('click')}
+                      aria-label={s.label}
+                    >
+                      {s.icon}
+                      {s.label}
+                    </a>
+                  </MagneticButton>
                 ))}
               </div>
             </div>

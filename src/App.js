@@ -15,6 +15,7 @@ import CustomCursor from './components/CustomCursor';
 import PageIntro from './components/PageIntro';
 import Footer from './components/Footer';
 import ScrollRail from './components/ScrollRail';
+import DotGrid from './components/DotGrid';
 
 import { ThemeProvider } from './context/ThemeContext';
 import { AudioProvider } from './context/AudioContext';
@@ -121,6 +122,7 @@ function App() {
           <div className="app-container">
             <PageIntro />
             <CustomCursor />
+            <DotGrid />
             <NoiseOverlay />
             <CursorSpotlight />
             <SocialPresence />

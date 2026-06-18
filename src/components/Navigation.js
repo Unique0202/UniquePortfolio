@@ -4,6 +4,7 @@ import { Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { useAudio } from '../context/AudioContext';
+import MagneticButton from './MagneticButton';
 
 const LINKS = [
   { name: 'Home',     path: '/' },
@@ -44,9 +45,11 @@ const Navigation = () => {
         aria-label="Main navigation"
       >
         {/* Logo mark */}
-        <Link to="/" className="nav-logo" onClick={handleLink} onMouseEnter={handleHover} aria-label="Home">
-          U<span className="nav-logo-dot">.</span>
-        </Link>
+        <MagneticButton strength={0.35}>
+          <Link to="/" className="nav-logo" onClick={handleLink} onMouseEnter={handleHover} aria-label="Home">
+            U<span className="nav-logo-dot">.</span>
+          </Link>
+        </MagneticButton>
 
         {/* Nav links */}
         <ul className="nav-links">
@@ -75,26 +78,28 @@ const Navigation = () => {
         </ul>
 
         {/* Theme toggle */}
-        <motion.button
-          className="nav-theme"
-          onClick={handleTheme}
-          onMouseEnter={handleHover}
-          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          whileTap={{ scale: 0.85 }}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.span
-              key={theme}
-              initial={{ opacity: 0, rotate: -45, scale: 0.7 }}
-              animate={{ opacity: 1, rotate: 0,   scale: 1   }}
-              exit={{    opacity: 0, rotate:  45, scale: 0.7 }}
-              transition={{ duration: 0.22, ease: EASE }}
-              style={{ display: 'flex' }}
-            >
-              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
-            </motion.span>
-          </AnimatePresence>
-        </motion.button>
+        <MagneticButton strength={0.4}>
+          <motion.button
+            className="nav-theme"
+            onClick={handleTheme}
+            onMouseEnter={handleHover}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            whileTap={{ scale: 0.85 }}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={theme}
+                initial={{ opacity: 0, rotate: -45, scale: 0.7 }}
+                animate={{ opacity: 1, rotate: 0,   scale: 1   }}
+                exit={{    opacity: 0, rotate:  45, scale: 0.7 }}
+                transition={{ duration: 0.22, ease: EASE }}
+                style={{ display: 'flex' }}
+              >
+                {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
+        </MagneticButton>
       </motion.nav>
 
       {/* ── Mobile bottom tab bar ─────────────────────────────────────────────── */}
